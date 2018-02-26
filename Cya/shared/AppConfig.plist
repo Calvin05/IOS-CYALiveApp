@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>eventUrl</key>
+	<string>https://events.synaptop.com/</string>
+	<key>uploadApiUrl</key>
+	<string>https://stg-uploadapi.synaptop.com/api/v3/upload</string>
+	<key>purchaseUrl</key>
+	<string>https://stg-purchaseapi.synaptop.com/api/v3</string>
+	<key>sigApiUrl</key>
+	<string>https://stg-sigapi.synaptop.com</string>
+	<key>authApiUrl</key>
+	<string>https://stg-authapi.synaptop.com/api/v3/auth</string>
+	<key>userApiUrl</key>
+	<string>https://stg-userapi.synaptop.com/api/v3/users</string>
+	<key>syncApiUrl</key>
+	<string>https://stg-syncapi.synaptop.com</string>
+	<key>webRtcUrl</key>
+	<string>https://stg-events.synaptop.com</string>
+	<key>eventApiUrl</key>
+	<string>https://stg-eventapi.synaptop.com/api/v3/events</string>
+	<key>castUrl</key>
+	<string>https://stg-castapi.synaptop.com</string>
+	<key>chatUrl</key>
+	<string>https://stg-chatapi.synaptop.com</string>
+</dict>
+</plist>
