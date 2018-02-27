@@ -13,7 +13,7 @@ class ChatController: UIViewController,  UITableViewDelegate, UITableViewDataSou
     
     private var tableview: UITableView = UITableView()
     private var messageInput: UITextField = UITextField()
-    private let btnSend = UIButton(type: .system) as UIButton
+    private let btnSend = UIButton()
     private let contentView: UIView = UIView()
     private let headerTable: EdgeInsetLabel = EdgeInsetLabel()
     
@@ -362,26 +362,31 @@ extension ChatController {
     func loadInputButton(){
         
         
-        contentView.layer.backgroundColor = UIColor.white.cgColor
+        contentView.layer.backgroundColor = UIColor.cyaLightGrayBg.cgColor
 
         
         messageInput.font = UIFont(name: "Avenir-Book", size: 16)
-        messageInput.layer.borderColor = UIColor.darkGray.cgColor
-        messageInput.backgroundColor = UIColor.lightGray
+        messageInput.layer.borderColor = UIColor.lightGray.cgColor
+        messageInput.backgroundColor = UIColor.white
         messageInput.placeholder = "   New Message"
         messageInput.layer.masksToBounds = true
         messageInput.textColor = UIColor.darkGray
-        messageInput.layer.cornerRadius = 10
-        messageInput.layer.borderWidth = 0
-        messageInput.alpha = 0.9
+        messageInput.layer.cornerRadius = 16
+        messageInput.layer.borderWidth = 1
         messageInput.delegate = self
+        
+        messageInput.addTarget(self, action: #selector(messageInputDidChange), for: .editingChanged)
 
         
         btnSend.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
-        btnSend.titleLabel!.font =  UIFont(name: "Avenir-Book" , size: 16)
-        btnSend.setTitleColor(.lightGray, for: .normal)
-        btnSend.setTitle("Send", for: .normal)
-        btnSend.backgroundColor = .clear
+//        btnSend.titleLabel!.font =  UIFont(name: "Avenir-Book" , size: 16)
+//        btnSend.setTitleColor(.lightGray, for: .normal)
+//        btnSend.setTitle("Send", for: .normal)
+        btnSend.backgroundColor = UIColor.cyaMagenta
+        btnSend.layer.cornerRadius = 19
+        btnSend.setImage(UIImage(named: "cya_send"), for: .normal)
+        btnSend.imageView?.contentMode = .scaleAspectFit
+        btnSend.isEnabled = false
        
         
         self.view.addSubview(contentView)
@@ -402,15 +407,38 @@ extension ChatController {
 
         messageInput.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         messageInput.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-        messageInput.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -100).isActive = true
+        messageInput.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -60).isActive = true
         messageInput.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         messageInput.translatesAutoresizingMaskIntoConstraints = false
         
+        messageInput.leftView = PaddingUITextField.getPadding(x: 0, y: 0, width: 15, height: Int(self.messageInput.frame.height))
+        messageInput.leftViewMode = UITextFieldViewMode.always
+        
+        messageInput.rightView = PaddingUITextField.getPadding(x: 0, y: 0, width: 15, height: Int(self.messageInput.frame.height))
+        messageInput.rightViewMode = UITextFieldViewMode.always
+        
+        
+        
         btnSend.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        btnSend.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 5).isActive = true
-        btnSend.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
-        btnSend.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        btnSend.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 10).isActive = true
+//        btnSend.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
+//        btnSend.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        
+        btnSend.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        btnSend.widthAnchor.constraint(equalToConstant: 38).isActive = true
+        
+        
         btnSend.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    @objc func messageInputDidChange(messageInput: UITextField){
+        
+        if (messageInput.text != nil && messageInput.text != "" && messageInput.text?.trimmingCharacters(in: .whitespaces) != ""){
+
+            self.btnSend.isEnabled = true
+        }else{
+            self.btnSend.isEnabled = false
+        }
     }
     
     @objc func sendMessage(sender:UIButton!) {
@@ -429,6 +457,8 @@ extension ChatController {
             
             chatService?.sendMessage(msg: messageInput.text!)
             messageInput.text = ""
+            
+            self.btnSend.isEnabled = false
             
             self.messageInput.resignFirstResponder()
         }

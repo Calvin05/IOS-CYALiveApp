@@ -109,6 +109,7 @@
 		E93614FE1FFD9DC20088BEC2 /* RTCICECandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614FD1FFD9DC10088BEC2 /* RTCICECandidate+JSON.m */; };
 		E9363CE11F7C44360079494B /* AppConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9363CE01F7C44360079494B /* AppConfig.plist */; };
 		E9363CE31F7C49B30079494B /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9363CE21F7C49B30079494B /* ChatService.swift */; };
+		E93713042044BCB400F92140 /* PaddingUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93713032044BCB400F92140 /* PaddingUITextField.swift */; };
 		E938F84F1F87C4FF00E83DEA /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E938F84E1F87C4FF00E83DEA /* Socket.swift */; };
 		E938F8501F87E48700E83DEA /* SocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E938F8511F87E48700E83DEA /* SocketIO.framework */; };
 		E938F8521F87E49200E83DEA /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E938F8531F87E49200E83DEA /* Alamofire.framework */; };
@@ -261,6 +262,7 @@
 		E93614FD1FFD9DC10088BEC2 /* RTCICECandidate+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCICECandidate+JSON.m"; sourceTree = "<group>"; };
 		E9363CE01F7C44360079494B /* AppConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppConfig.plist; sourceTree = "<group>"; };
 		E9363CE21F7C49B30079494B /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		E93713032044BCB400F92140 /* PaddingUITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingUITextField.swift; sourceTree = "<group>"; };
 		E938F84E1F87C4FF00E83DEA /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		E938F8511F87E48700E83DEA /* SocketIO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SocketIO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E938F8531F87E49200E83DEA /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -731,6 +733,7 @@
 				1B0E5A3A1FBE49260041C974 /* StringToDateExtension.swift */,
 				E94D1E0C1FCDC632008667A0 /* ErrorResponseDisplayObject.swift */,
 				E90116A12032515D009DE42E /* ErrorHelper.swift */,
+				E93713032044BCB400F92140 /* PaddingUITextField.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -998,6 +1001,7 @@
 				E92C655B1F85830D001BAEC9 /* SyncService.swift in Sources */,
 				1B50AD7E1F9114A10027C025 /* EdgeInsetLabel.swift in Sources */,
 				1BD192821FEB05E3001FEE1F /* TextFieldExtension.swift in Sources */,
+				E93713042044BCB400F92140 /* PaddingUITextField.swift in Sources */,
 				1B22A3F21FE4978D005B225B /* PurchaseService.swift in Sources */,
 				E9B9AB461F7C0D6000033402 /* EventService.swift in Sources */,
 				E93579B51F90005700901F59 /* User.swift in Sources */,

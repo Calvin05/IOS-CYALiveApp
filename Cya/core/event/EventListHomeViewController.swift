@@ -96,13 +96,14 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         searchBar.placeholder = "Search"
         searchBar.showsScopeBar = true
         searchBar.scopeButtonTitles = ["LATEST", "UPCOMING", "LIVE NOW", "MY EVENTS"]
+       
         searchBar.barTintColor = UIColor.cyaLightGrayBg
         searchBar.tintColor = UIColor.clear
         
         
         
         // Selected text
-        let titleTextAttributesSelected = [NSAttributedStringKey.foregroundColor: UIColor.cyaMagenta]
+        let titleTextAttributesSelected = [NSAttributedStringKey.foregroundColor: UIColor.cyaMagenta, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue, NSAttributedStringKey.underlineColor: UIColor.cyaMagenta] as [NSAttributedStringKey : Any]
         UISegmentedControl.appearance().setTitleTextAttributes(titleTextAttributesSelected, for: .selected)
         UISegmentedControl.appearance().backgroundColor = UIColor.clear
         
@@ -127,14 +128,16 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     
 
     func  viewConstraint(){
+        
+        let marginGuide = view.layoutMarginsGuide
+        
         tableView.register(ListEventsCell.self, forCellReuseIdentifier: "ListEventsCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
         tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
         
-        
-        tableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 130).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 110).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
         
     }
