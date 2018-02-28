@@ -72,8 +72,8 @@ class ChatController: UIViewController,  UITableViewDelegate, UITableViewDataSou
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.backgroundColor = UIColor.clear
-        view.backgroundColor = UIColor(white: 1, alpha: 0)
+//        view.backgroundColor = UIColor.clear
+//        view.backgroundColor = UIColor(white: 1, alpha: 0)
         view.isOpaque = false
         
         self.reloadScrolTable()
@@ -147,7 +147,7 @@ extension ChatController: UITextFieldDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+//        self.view.endEditing(true)
     }
     
     
@@ -240,14 +240,16 @@ extension ChatController {
     
     func configTabel(){
         
+        view.backgroundColor = UIColor.Cya_Facebook_Blue_Pressed.withAlphaComponent(0.6)
+        
         headerTable.text="Chat Room"
         headerTable.font = UIFont(name: "Avenir-Book", size: 16)
         headerTable.topTextInset = 10
         headerTable.leftTextInset = 30
         headerTable.bottomTextInset = 10
         headerTable.rightTextInset = 10
-        headerTable.backgroundColor = .white
-        headerTable.alpha = 0.9
+        headerTable.backgroundColor = .black
+        headerTable.alpha = 0.5
         
         buttonClosed.setTitle("Close", for: .normal)
         buttonClosed.setTitleColor(.darkGray, for: .normal)
@@ -263,11 +265,11 @@ extension ChatController {
         tableview.rowHeight = UITableViewAutomaticDimension
         tableview.separatorStyle = UITableViewCellSeparatorStyle.none
 
-        tableview.alpha = 0.9
-        tableview.layer.masksToBounds = true
+//        tableview.alpha = 0.5
+//        tableview.layer.masksToBounds = true
 //
-        tableview.layer.borderColor = UIColor.darkGray.cgColor
-        tableview.backgroundColor = UIColor.white
+//        tableview.layer.borderColor = UIColor.darkGray.cgColor
+        tableview.backgroundColor = UIColor.clear
 //
 //        tableview.layer.cornerRadius = 15
 //        tableview.layer.borderWidth = 1
@@ -290,7 +292,7 @@ extension ChatController {
         tableview.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         tableview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         tableview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        tableview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60).isActive = true
+        tableview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -55).isActive = true
         tableview.translatesAutoresizingMaskIntoConstraints = false
     }
 }
@@ -307,23 +309,30 @@ extension ChatController {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if messages[indexPath.row].user_id == UserDisplayObject.userId {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MessageChatCellUser") as! MessageChatCellUser
-            cell.avatar.downloadedFrom(defaultImage: "profile", link: (messages[indexPath.row].profile?.avatar!)!)
-        //cell.avatar.downloadedFrom(defaultImage: "profile", link: self.viewersArray[indexPath.item].avatar!)
-            let msnFull = " \((messages[indexPath.row].profile?.username!)!): \(messages[indexPath.row].content!)  "
-            let strMessage = attributedText(str1: msnFull, str2: (messages[indexPath.row].profile?.username!)!)
-            cell.messageLabel.attributedText = strMessage
-            
-            return cell
-        } else {
+//        if messages[indexPath.row].user_id == UserDisplayObject.userId {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "MessageChatCellUser") as! MessageChatCellUser
+//            cell.avatar.downloadedFrom(defaultImage: "profile", link: (messages[indexPath.row].profile?.avatar!)!)
+//        //cell.avatar.downloadedFrom(defaultImage: "profile", link: self.viewersArray[indexPath.item].avatar!)
+//            let msnFull = " \((messages[indexPath.row].profile?.username!)!): \(messages[indexPath.row].content!)  "
+//            let strMessage = attributedText(str1: msnFull, str2: (messages[indexPath.row].profile?.username!)!)
+//            cell.messageLabel.attributedText = strMessage
+//
+//
+//            return cell
+//        } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MessageChatCell") as! MessageChatCell
-            let msnFull = " \((messages[indexPath.row].profile?.username!)!): \(messages[indexPath.row].content!)  "
-            let strMessage = attributedText(str1: msnFull, str2: (messages[indexPath.row].profile?.username!)!)
-            cell.messageLabel.attributedText = strMessage
+            
+            cell.backgroundColor = UIColor.clear
+            
+//            let msnFull = "\((messages[indexPath.row].profile?.username!)!)\n\(messages[indexPath.row].content!)  "
+//            let strMessage = attributedText(str1: msnFull, str2: (messages[indexPath.row].profile?.username!)!)
+//            cell.messageLabel.attributedText = strMessage
+        
+            cell.messageLabel.text = messages[indexPath.row].content!
+            cell.userNameLabel.text = (messages[indexPath.row].profile?.username!)!
             cell.avatar.downloadedFrom(defaultImage: "profile", link: (messages[indexPath.row].profile?.avatar!)!)
             return cell
-        }
+//        }
     }
     
 
@@ -362,15 +371,15 @@ extension ChatController {
     func loadInputButton(){
         
         
-        contentView.layer.backgroundColor = UIColor.cyaLightGrayBg.cgColor
+        contentView.layer.backgroundColor = UIColor.clear.cgColor
 
         
-        messageInput.font = UIFont(name: "Avenir-Book", size: 16)
+        messageInput.font = UIFont(name: "Avenir-Book", size: 15)
         messageInput.layer.borderColor = UIColor.lightGray.cgColor
         messageInput.backgroundColor = UIColor.white
-        messageInput.placeholder = "   New Message"
+//        messageInput.placeholder = "   New Message"
         messageInput.layer.masksToBounds = true
-        messageInput.textColor = UIColor.darkGray
+        messageInput.textColor = UIColor.black
         messageInput.layer.cornerRadius = 16
         messageInput.layer.borderWidth = 1
         messageInput.delegate = self
@@ -379,12 +388,13 @@ extension ChatController {
 
         
         btnSend.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
-//        btnSend.titleLabel!.font =  UIFont(name: "Avenir-Book" , size: 16)
-//        btnSend.setTitleColor(.lightGray, for: .normal)
-//        btnSend.setTitle("Send", for: .normal)
-        btnSend.backgroundColor = UIColor.cyaMagenta
-        btnSend.layer.cornerRadius = 19
-        btnSend.setImage(UIImage(named: "cya_send"), for: .normal)
+        btnSend.titleLabel!.font =  UIFont(name: "Avenir-Book" , size: 16)
+        btnSend.titleLabel!.font = .boldSystemFont(ofSize: 16)
+        btnSend.setTitleColor(.black, for: .normal)
+        btnSend.setTitle(">", for: .normal)
+        btnSend.backgroundColor = UIColor.white
+        btnSend.layer.cornerRadius = 16
+//        btnSend.setImage(UIImage(named: "cya_send"), for: .normal)
         btnSend.imageView?.contentMode = .scaleAspectFit
         btnSend.isEnabled = false
        
@@ -406,8 +416,8 @@ extension ChatController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
 
         messageInput.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        messageInput.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-        messageInput.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -60).isActive = true
+        messageInput.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 15).isActive = true
+        messageInput.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -50).isActive = true
         messageInput.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         messageInput.translatesAutoresizingMaskIntoConstraints = false
         
@@ -420,12 +430,10 @@ extension ChatController {
         
         
         btnSend.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        btnSend.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 10).isActive = true
-//        btnSend.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
-//        btnSend.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        btnSend.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 8).isActive = true
         
-        btnSend.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        btnSend.widthAnchor.constraint(equalToConstant: 38).isActive = true
+        btnSend.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        btnSend.widthAnchor.constraint(equalToConstant: 32).isActive = true
         
         
         btnSend.translatesAutoresizingMaskIntoConstraints = false
@@ -460,7 +468,7 @@ extension ChatController {
             
             self.btnSend.isEnabled = false
             
-            self.messageInput.resignFirstResponder()
+//            self.messageInput.resignFirstResponder()
         }
     }
     
