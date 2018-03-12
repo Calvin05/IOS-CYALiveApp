@@ -13,6 +13,8 @@ class RoleView: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     private let cellId = "cellId"
     var roleArray: [Role] = []
     
+    var layout: UICollectionViewFlowLayout?
+    
     init(collectionViewLayout layout: UICollectionViewLayout, roleArray: [Role]) {
         super.init(collectionViewLayout: layout)
         self.roleArray = roleArray
@@ -25,8 +27,22 @@ class RoleView: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.clear
-        collectionView?.alwaysBounceVertical = true
+        collectionView?.alwaysBounceVertical = false
+        collectionView?.alwaysBounceHorizontal = true
+        self.collectionView?.isPagingEnabled = true
+        
+        layout = self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        layout?.scrollDirection = UICollectionViewScrollDirection.horizontal
+        
         collectionView?.register(RoleCell.self, forCellWithReuseIdentifier: cellId)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        collectionView?.alwaysBounceVertical = false
+        collectionView?.alwaysBounceHorizontal = true
+        self.collectionView?.isPagingEnabled = true
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

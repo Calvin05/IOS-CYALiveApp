@@ -64,6 +64,8 @@ struct Font {
         case h4 = 14.0
         case h5 = 12.0
         case h6 = 10.0
+        case s8 = 8.0
+        case s9 = 9.0
         case body = 13.0
         case inputText = 17.0
         case error = 15.0
@@ -137,6 +139,15 @@ class FontCya  {
 
      */
     
+    static let CyaMontMediumXL    = Font(.installed(.MontserratRegular), size: .standard(.h1XL)).instance// 30
+    static let CyaMontMediumH1           = Font(.installed(.MontserratMedium), size: .standard(.h1)).instance // 20
+    static let CyaMontMediumH2           = Font(.installed(.MontserratMedium), size: .standard(.h2)).instance // 18
+    static let CyaMontMediumH3           = Font(.installed(.MontserratMedium), size: .standard(.h3)).instance // 16
+    static let CyaMontMediumH4           = Font(.installed(.MontserratMedium), size: .standard(.h4)).instance // 14
+    static let CyaMontMediumH5           = Font(.installed(.MontserratMedium), size: .standard(.h5)).instance // 12
+    static let CyaMontMediumH6           = Font(.installed(.MontserratMedium), size: .standard(.h6)).instance // 10
+    
+    
     static let CyaTextButtonRegXL    = Font(.installed(.MontserratRegular), size: .standard(.h1XL)).instance// 30
     static let CyaTitlesH1           = Font(.installed(.MontserratRegular), size: .standard(.h1)).instance // 20
     static let CyaTitlesH2           = Font(.installed(.MontserratRegular), size: .standard(.h2)).instance // 18
@@ -150,7 +161,9 @@ class FontCya  {
     static let CyaTitlesH3Light      = Font(.installed(.MontserratLight), size: .standard(.h3)).instance // 16
     static let CyaTitlesH4Light      = Font(.installed(.MontserratLight), size: .standard(.h4)).instance // 14
     static let CyaTitlesH5Light      = Font(.installed(.MontserratLight), size: .standard(.h5)).instance // 12
-    static let CyaTitlesH6Light      = Font(.installed(.MontserratLight), size: .standard(.h5)).instance // 10
+    static let CyaTitlesH6Light      = Font(.installed(.MontserratLight), size: .standard(.h6)).instance // 10
+    static let CyaTitlesS8Light      = Font(.installed(.MontserratLight), size: .standard(.s8)).instance // 8
+    static let CyaTitlesS9Light      = Font(.installed(.MontserratLight), size: .standard(.s9)).instance // 9
     
     static let CyaBody               = Font(.installed(.MontserratLight), size: .standard(.body)).instance      // 13
     static let CyaInput              = Font(.installed(.MontserratLight), size: .standard(.inputText)).instance // 17

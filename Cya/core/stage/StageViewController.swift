@@ -107,8 +107,8 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         self.setLayoutBottomBar()
         self.setEventDescription()
         self.setStatusStageText()
-        self.setChatContainer()
         self.setViewersContainer()
+        self.setChatContainer()
         
         
         self.sigService?.getViewers()
@@ -768,7 +768,6 @@ extension StageViewController: ToolBarMenuDelegate {
     }
     
     func chatButtonAction() {
-        viewersContainer.isHidden = true
         chatContainer.isHidden = false
     }
     

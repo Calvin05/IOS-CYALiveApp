@@ -16,6 +16,8 @@ class ListEventsCell:  UITableViewCell {
 	var TimeEvent: EdgeInsetLabel = EdgeInsetLabel()
 	var titleEvent: EdgeInsetLabel = EdgeInsetLabel()
 	var descriptionEvent: EdgeInsetLabel = EdgeInsetLabel()
+    var contentRoles : UIView = UIView()
+    var avatarRoles: AvatarView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,6 +46,7 @@ class ListEventsCell:  UITableViewCell {
         setupTimeEvent()
         setupTitleEvent()
         setupDescriptionEvent()
+        setupRoles()
     }
 }
 
@@ -138,6 +141,29 @@ extension ListEventsCell {
         descriptionEvent.numberOfLines = 0
         descriptionEvent.lineBreakMode = .byWordWrapping
         descriptionEvent.sizeToFit()
+    }
+    
+    func setupRoles(){
+        
+        viewContent.addSubview(contentRoles)
+        
+        contentRoles.topAnchor.constraint(equalTo: descriptionEvent.bottomAnchor, constant: 22).isActive = true
+        contentRoles.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        contentRoles.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        contentRoles.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        contentRoles.translatesAutoresizingMaskIntoConstraints    = false
+        
+        contentRoles.backgroundColor = UIColor.cyaLightGrayBg
+        
+        
+//        avatarRoles!.view.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        avatarRoles!.view.topAnchor.constraint(equalTo: contentRoles.topAnchor, constant: 0).isActive = true
+//        avatarRoles!.view.leftAnchor.constraint(equalTo: contentRoles.leftAnchor, constant: 0).isActive = true
+//        avatarRoles!.view.rightAnchor.constraint(equalTo: contentRoles.rightAnchor, constant: 0).isActive = true
+//        avatarRoles!.view.bottomAnchor.constraint(equalTo: contentRoles.bottomAnchor, constant: 0).isActive = true
+        
+        
     }
 
 }

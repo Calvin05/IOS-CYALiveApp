@@ -45,6 +45,10 @@ struct ErrorHelper {
         throw self.error!
     }
     
+    static func setCustomErrorMessage(message: String) {
+        self.error = NSError(domain: message, code: 400, userInfo: nil)
+    }
+    
     static func showAlert() -> UIAlertController{
         let alert = UIAlertController()
         alert.title = "Error"

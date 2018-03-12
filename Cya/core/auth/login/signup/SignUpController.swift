@@ -12,8 +12,9 @@ class SignUpController: UIViewController {
     
     var viewContent: UIView = UIView()
     var gradientLayer: CAGradientLayer = CAGradientLayer()
-    var backButtonView: BackButtonView?
     var cyaImage: UIImageView = UIImageView()
+    var createAccountTitle: EdgeInsetLabel = EdgeInsetLabel()
+    var cancelButton: UIButton = UIButton(type: .system) as UIButton
     
     var userNameTextField: UITextField = UITextField()
     var emailTextField: UITextField = UITextField()
@@ -26,15 +27,21 @@ class SignUpController: UIViewController {
     var signUpContainer: UIView = UIView()
     var signUpButton: UIButton = UIButton(type: .system) as UIButton
     
+    var signingUpLaber: EdgeInsetLabel = EdgeInsetLabel()
     var footerView: FooterViewComponent = FooterViewComponent()
 
     let authService: AuthService = AuthService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.setupView()
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        userNameTextField.underline(color: UIColor.gray, borderWidth: CGFloat(1.0))
+        emailTextField.underline(color: UIColor.gray, borderWidth: CGFloat(1.0))
+        passwordTextField.underline(color: UIColor.gray, borderWidth: CGFloat(1.0))
     }
     
     @objc func createAccountAction(){
@@ -74,6 +81,11 @@ class SignUpController: UIViewController {
         }
     }
     
+    @objc func backAction(){
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func setErrorMessage(errorResponse: ErrorResponseDisplayObject){
         errorLabel.isHidden = false
         
@@ -93,17 +105,17 @@ extension SignUpController{
     
     func setupView(){
         
-        view.backgroundColor = UIColor.Cya_Background_Light
+        view.backgroundColor = UIColor.cyaLightGrayBg
         
         
-        setGradientLayer()
+//        setGradientLayer()
         setViewContent()
-        setBackButton()
+        setCancelButton()
         setCyaImage()
         setTextField()
         notificationKeyboard()
-        setFooter()
         setSignUpButton()
+        setTermsConditions()
         setErrorMessage()
         
         
@@ -120,7 +132,7 @@ extension SignUpController{
         viewContent.rightAnchor.constraint(equalTo: marginGuide.rightAnchor, constant: 20).isActive = true
         viewContent.translatesAutoresizingMaskIntoConstraints       = false
         
-        viewContent.backgroundColor = UIColor.clear
+        viewContent.backgroundColor = UIColor.cyaLightGrayBg
     }
     
     func setGradientLayer(){
@@ -132,35 +144,53 @@ extension SignUpController{
         gradientLayer.locations = [0.3, 1.2]
     }
     
-    func setBackButton(){
+    func setCancelButton(){
         
-        self.backButtonView = BackButtonView()
-        self.backButtonView?.setParent(parent: self)
-        viewContent.addSubview(backButtonView!)
+        viewContent.addSubview(cancelButton)
         
-        backButtonView?.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
-        backButtonView?.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 0).isActive = true
-        backButtonView?.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
-        backButtonView?.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
-        backButtonView?.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        cancelButton.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
+        cancelButton.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        cancelButton.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        cancelButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        backButtonView?.backView.backgroundColor = UIColor.clear
+        cancelButton.backgroundColor = UIColor.white
+        
+        cancelButton.titleLabel?.font = FontCya.CyaTitlesH4Light
+        cancelButton.setTitleColor(.black, for: .normal)
+        cancelButton.addTarget(self, action: #selector(backAction), for: .touchUpInside)
+        cancelButton.setTitle("Cancel", for: .normal)
         
     }
     
     func setCyaImage(){
         viewContent.addSubview(cyaImage)
+        viewContent.addSubview(createAccountTitle)
         
         cyaImage.translatesAutoresizingMaskIntoConstraints = false
+        createAccountTitle.translatesAutoresizingMaskIntoConstraints = false
         
         cyaImage.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
-        cyaImage.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 50).isActive = true
-        cyaImage.heightAnchor.constraint(equalToConstant: 90).isActive = true
-        cyaImage.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        cyaImage.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 40).isActive = true
+        cyaImage.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        cyaImage.widthAnchor.constraint(equalToConstant: 110).isActive = true
         
         cyaImage.image = UIImage(named: "cya_icon_l")
         cyaImage.contentMode = .scaleAspectFit
+        
+        
+        createAccountTitle.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        createAccountTitle.topAnchor.constraint(equalTo: cyaImage.bottomAnchor, constant: 20).isActive = true
+        
+        createAccountTitle.textColor = UIColor.gray
+        createAccountTitle.numberOfLines = 0
+        createAccountTitle.textAlignment = .center
+        createAccountTitle.lineBreakMode = .byWordWrapping
+        createAccountTitle.sizeToFit()
+        createAccountTitle.text = "Create Account"
+        createAccountTitle.font = FontCya.CyaTitlesH1
+        
     }
     
     func setTextField(){
@@ -180,59 +210,50 @@ extension SignUpController{
         passwordTextField.centerYAnchor.constraint(equalTo: viewContent.centerYAnchor, constant: -10).isActive = true
         passwordTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         passwordTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        passwordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        passwordTextField.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         passwordTextField.font = FontCya.CyaInput
-        passwordTextField.backgroundColor = UIColor.white
-        passwordTextField.attributedPlaceholder = NSAttributedString(string: "New Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.cyaMagenta])
-        passwordTextField.layer.masksToBounds = true
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: "Enter Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.gray])
         passwordTextField.textColor = UIColor.gray
-        passwordTextField.layer.cornerRadius = 12
         passwordTextField.isSecureTextEntry = true
         
-        passwordTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        passwordTextField.leftViewMode = UITextFieldViewMode.always
+//        passwordTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        passwordTextField.leftViewMode = UITextFieldViewMode.always
+//
+//        passwordTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        passwordTextField.rightViewMode = UITextFieldViewMode.always
         
-        passwordTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        passwordTextField.rightViewMode = UITextFieldViewMode.always
         
-        
-        emailTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -20).isActive = true
+        emailTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -30).isActive = true
         emailTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         emailTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        emailTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        emailTextField.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         emailTextField.font = FontCya.CyaInput
-        emailTextField.backgroundColor = UIColor.white
-        emailTextField.placeholder = "Email Address"
-        emailTextField.layer.masksToBounds = true
+        emailTextField.attributedPlaceholder = NSAttributedString(string: "Enter Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.gray])
         emailTextField.textColor = UIColor.gray
-        emailTextField.layer.cornerRadius = 12
         emailTextField.keyboardType = .emailAddress
         
-        emailTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        emailTextField.leftViewMode = UITextFieldViewMode.always
+//        emailTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        emailTextField.leftViewMode = UITextFieldViewMode.always
+//
+//        emailTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        emailTextField.rightViewMode = UITextFieldViewMode.always
         
-        emailTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        emailTextField.rightViewMode = UITextFieldViewMode.always
-        
-        userNameTextField.bottomAnchor.constraint(equalTo: emailTextField.topAnchor, constant: -20).isActive = true
+        userNameTextField.bottomAnchor.constraint(equalTo: emailTextField.topAnchor, constant: -30).isActive = true
         userNameTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         userNameTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        userNameTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        userNameTextField.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         userNameTextField.font = FontCya.CyaInput
-        userNameTextField.backgroundColor = UIColor.white
-        userNameTextField.placeholder = "Username"
-        userNameTextField.layer.masksToBounds = true
+        userNameTextField.attributedPlaceholder = NSAttributedString(string: "Username", attributes: [NSAttributedStringKey.foregroundColor: UIColor.gray])
         userNameTextField.textColor = UIColor.gray
-        userNameTextField.layer.cornerRadius = 12
         
-        userNameTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        userNameTextField.leftViewMode = UITextFieldViewMode.always
-        
-        userNameTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
-        userNameTextField.rightViewMode = UITextFieldViewMode.always
+//        userNameTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        userNameTextField.leftViewMode = UITextFieldViewMode.always
+//
+//        userNameTextField.rightView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
+//        userNameTextField.rightViewMode = UITextFieldViewMode.always
         
         
     }
@@ -243,35 +264,18 @@ extension SignUpController{
         
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        errorLabel.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 50).isActive = true
-        errorLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -50).isActive = true
-        errorLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20).isActive = true
+        
+        errorLabel.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        errorLabel.bottomAnchor.constraint(equalTo: signUpButton.topAnchor, constant: -30).isActive = true
         
         errorLabel.isHidden = true
-        errorLabel.textColor = UIColor.cyaMagenta
+        errorLabel.textColor = UIColor.red
         errorLabel.numberOfLines = 0
         errorLabel.textAlignment = .center
         errorLabel.lineBreakMode = .byWordWrapping
         errorLabel.sizeToFit()
         errorLabel.text = ""
-        errorLabel.font = FontCya.CyaError
-    }
-    
-    func setFooter(){
-        
-        viewContent.addSubview(footerView)
-        
-        footerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        footerView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
-        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
-        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        footerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        footerView.footerLabel.textColor = UIColor.white
-        footerView.termsButton.setTitleColor(UIColor.white, for: .normal)
-        footerView.privacy.setTitleColor(UIColor.white, for: .normal)
+        errorLabel.font = FontCya.CyaTitlesH5Light
     }
     
     func setSignUpButton(){
@@ -283,20 +287,60 @@ extension SignUpController{
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
         
         signUpContainer.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 0).isActive = true
-        signUpContainer.bottomAnchor.constraint(equalTo: footerView.topAnchor, constant: 0).isActive = true
+        signUpContainer.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: 0).isActive = true
         signUpContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
         signUpContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
         
         signUpButton.layer.masksToBounds = true
         signUpButton.centerXAnchor.constraint(equalTo: signUpContainer.centerXAnchor, constant: 0).isActive = true
-        signUpButton.centerYAnchor.constraint(equalTo: signUpContainer.centerYAnchor, constant: 0).isActive = true
-        signUpButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        signUpButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        signUpButton.centerYAnchor.constraint(equalTo: signUpContainer.centerYAnchor, constant: -30).isActive = true
+        signUpButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
+        signUpButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
         
-        signUpButton.titleLabel?.font = FontCya.CyaInput
-        signUpButton.setTitleColor(.white, for: .normal)
+        signUpButton.titleLabel?.font = FontCya.CyaTitlesH3Light
+        signUpButton.backgroundColor = UIColor.clear
+        signUpButton.layer.cornerRadius = 19
+        signUpButton.layer.borderWidth = 1
+        signUpButton.layer.borderColor = UIColor.lightGray.cgColor
+        signUpButton.layer.masksToBounds = true
+        signUpButton.setTitleColor(.black, for: .normal)
         signUpButton.addTarget(self, action: #selector(createAccountAction), for: .touchUpInside)
         signUpButton.setTitle("Sign Up", for: .normal)
+        
+    }
+    
+    func setTermsConditions(){
+        
+        
+        viewContent.addSubview(signingUpLaber)
+        viewContent.addSubview(footerView)
+        
+        signingUpLaber.translatesAutoresizingMaskIntoConstraints = false
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        signingUpLaber.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 20).isActive = true
+        signingUpLaber.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        
+        signingUpLaber.textColor = UIColor.gray
+        signingUpLaber.numberOfLines = 0
+        signingUpLaber.textAlignment = .center
+        signingUpLaber.lineBreakMode = .byWordWrapping
+        signingUpLaber.sizeToFit()
+        signingUpLaber.text = "By signing up, you are agreeing to our"
+        signingUpLaber.font = FontCya.CyaIconSM
+        
+        footerView.topAnchor.constraint(equalTo: signingUpLaber.bottomAnchor, constant: 0).isActive = true
+        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        footerView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        footerView.footerLabel.text = ""
+        
+        footerView.termsButton.titleLabel?.font = FontCya.CyaIconSM
+        
+        footerView.privacy.titleLabel?.font = FontCya.CyaIconSM
     }
     
     func paddingUITextField(x: Int, y: Int, width: Int, height: Int) -> UIView{

@@ -20,6 +20,7 @@ target 'Cya' do
   pod 'GoogleSignIn'
   
   pod 'libjingle_peerconnection'
+  pod 'SDWebImage'
   
 end
 

@@ -18,8 +18,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="YJ4-dg-T9x">
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YJ4-dg-T9x">
                                 <rect key="frame" x="0.0" y="84" width="375" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j8G-m8-U3Y">
@@ -48,11 +49,6 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="YJ4-dg-T9x" firstAttribute="leading" secondItem="kpC-qc-scI" secondAttribute="leading" id="AG6-YN-da5"/>
-                            <constraint firstItem="YJ4-dg-T9x" firstAttribute="trailing" secondItem="kpC-qc-scI" secondAttribute="trailing" id="UPk-lL-qmN"/>
-                            <constraint firstItem="YJ4-dg-T9x" firstAttribute="top" secondItem="kpC-qc-scI" secondAttribute="top" constant="20" id="kQT-Bi-zdR"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="kpC-qc-scI"/>
                     </view>
                     <navigationItem key="navigationItem" id="xh2-ZR-IIZ"/>

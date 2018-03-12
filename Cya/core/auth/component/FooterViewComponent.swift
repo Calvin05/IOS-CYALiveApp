@@ -10,8 +10,8 @@ import UIKit
 
 class FooterViewComponent: UIView {
 
-    var termsButton: UIButton = UIButton(type: .system) as UIButton
-    var privacy: UIButton = UIButton(type: .system) as UIButton
+    var termsButton: UIButton = UIButton()
+    var privacy: UIButton = UIButton()
     var footerLabel: EdgeInsetLabel = EdgeInsetLabel()
     var fontColor: UIColor = UIColor.gray
 
@@ -44,10 +44,19 @@ extension FooterViewComponent{
         termsButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         termsButton.rightAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
         
+        
+        
+        let attributes: [NSAttributedStringKey: Any] = [
+            NSAttributedStringKey.underlineColor: UIColor.gray,
+            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue]
+        let attributesString = NSMutableAttributedString(string: "Terms & Conditions", attributes: attributes)
+        termsButton.setAttributedTitle(attributesString, for: .normal)
+        
+        
         termsButton.titleLabel?.font = FontCya.CyaTitlesH5Light
         termsButton.setTitleColor(fontColor, for: .normal)
         termsButton.addTarget(self, action: #selector(termsButtonAction), for: .touchUpInside)
-        termsButton.setTitle("TERMS OF SERVICE", for: .normal)
+//        termsButton.setTitle("Terms & Conditions", for: .normal)
         termsButton.contentHorizontalAlignment = .right
         
         
@@ -59,10 +68,13 @@ extension FooterViewComponent{
         privacy.widthAnchor.constraint(equalToConstant: 160).isActive = true
         privacy.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
+
+        let attributesStringPrivacy = NSMutableAttributedString(string: " and Privacy Policy", attributes: attributes)
+        privacy.setAttributedTitle(attributesStringPrivacy, for: .normal)
         privacy.titleLabel?.font = FontCya.CyaTitlesH5Light
         privacy.setTitleColor(fontColor, for: .normal)
         privacy.addTarget(self, action: #selector(privacyButtonAction), for: .touchUpInside)
-        privacy.setTitle(" ~ PRIVACY POLICY", for: .normal)
+        privacy.setTitle(" and Privacy Policy", for: .normal)
         privacy.contentHorizontalAlignment = .left
         
         

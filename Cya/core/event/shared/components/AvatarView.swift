@@ -15,6 +15,7 @@ class AvatarView: UICollectionViewController, UICollectionViewDelegateFlowLayout
     var leftInset: CGFloat = 0.0
     var rightInset: CGFloat = 0.0
     var count = 3
+    var layout: UICollectionViewFlowLayout?
     
     init(collectionViewLayout layout: UICollectionViewLayout, avatarArray: [Role]) {
         super.init(collectionViewLayout: layout)
@@ -35,8 +36,11 @@ class AvatarView: UICollectionViewController, UICollectionViewDelegateFlowLayout
 extension AvatarView {
     
     func settingCollectionView(){
+        layout = self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
+        layout?.scrollDirection = UICollectionViewScrollDirection.horizontal
+        
         collectionView?.backgroundColor = UIColor.clear
-        collectionView?.alwaysBounceVertical = true
+        collectionView?.alwaysBounceVertical = false
         collectionView?.register(AvatarCell.self, forCellWithReuseIdentifier: self.cellAvatar)
     }
     

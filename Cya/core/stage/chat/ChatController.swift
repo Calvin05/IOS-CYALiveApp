@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import SDWebImage
 
 class ChatController: UIViewController,  UITableViewDelegate, UITableViewDataSource  {
     
@@ -330,7 +331,10 @@ extension ChatController {
         
             cell.messageLabel.text = messages[indexPath.row].content!
             cell.userNameLabel.text = (messages[indexPath.row].profile?.username!)!
-            cell.avatar.downloadedFrom(defaultImage: "profile", link: (messages[indexPath.row].profile?.avatar!)!)
+//            cell.avatar.downloadedFrom(defaultImage: "profile", link: (messages[indexPath.row].profile?.avatar!)!)
+        
+            cell.avatar.sd_setImage(with: URL(string: (messages[indexPath.row].profile?.avatar!)!), placeholderImage: UIImage(named: "profile"))
+        
             return cell
 //        }
     }

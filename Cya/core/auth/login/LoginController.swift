@@ -19,6 +19,7 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
     var watchContainer: UIView = UIView()
     var watchNowButton: UIButton = UIButton(type: .system) as UIButton
     var signInButton: UIButton = UIButton(type: .system) as UIButton
+    var lowerViewContainer: UIView = UIView()
     var createAccountContainer: UIView = UIView()
     var createAccountButton: UIButton = UIButton(type: .system) as UIButton
     var orContainer: UIView = UIView()
@@ -26,13 +27,17 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
     var lineRight: UIView = UIView()
     var orLaber: UILabel = UILabel()
     
-    var signInWithContainer: UIView = UIView()
-    var signInWithLabel: UILabel = UILabel()
+//    var signInWithContainer: UIView = UIView()
+//    var signInWithLabel: UILabel = UILabel()
 //    var googleButton: GIDSignInButton = GIDSignInButton()
     var googleButton: UIButton = UIButton()
     var facebookButton: UIButton = UIButton()
     
-    var footerView: FooterViewComponent = FooterViewComponent()
+//    var footerView: FooterViewComponent = FooterViewComponent()
+    var footerContainer: UIView = UIView()
+    var footerBackground: UIView = UIView()
+    var footerLabel: EdgeInsetLabel = EdgeInsetLabel()
+    var footerVersionLabel: EdgeInsetLabel = EdgeInsetLabel()
     
     var textFielContainer: UIView = UIView()
     var emailTextField: UITextField = UITextField()
@@ -72,6 +77,12 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
 
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        emailTextField.underline(color: UIColor.white, borderWidth: CGFloat(1.0))
+        passwordTextField.underline(color: UIColor.white, borderWidth: CGFloat(1.0))
+    }
+    
     func paddingUITextField(x: Int, y: Int, width: Int, height: Int) -> UIView{
         let paddingView = UIView(frame: CGRect(x:x, y:y, width:width, height:height))
         
@@ -79,15 +90,17 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
     }
     
     @objc func signIn(){
+        
         self.fb_go_errorLoginLabel.isHidden = true
-        if(isLogin){
-            self.activityIndicator?.showActivityIndicator()
-            errorLoginLabel.isHidden = true
-            login()
-        }else{
-            setTextBox()
-            isLogin = true
-        }
+        login()
+//        if(isLogin){
+//            self.activityIndicator?.showActivityIndicator()
+//            errorLoginLabel.isHidden = true
+//            login()
+//        }else{
+//            setTextBox()
+//            isLogin = true
+//        }
     }
     
     @objc func watchNowButtonAction(){
@@ -190,7 +203,12 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
         
         let loginDisplayObject: LoginDisplayObject = authService.login(email: emailTextField.text!, password: passwordTextField.text!)
         if(loginDisplayObject.user_id == nil){
-            errorLoginLabel.isHidden = false
+//            errorLoginLabel.isHidden = false
+            
+                ErrorHelper.setCustomErrorMessage(message: "There is a problem with your login credentials. Either your username or password is incorrect")
+            
+            
+            self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
         }else{
             startApp(loginDisplayObject: loginDisplayObject)
         }
@@ -268,10 +286,12 @@ extension LoginController{
         setViewContent()
         setCyaImage()
         setSignInButton()
-        setWatchNow()
+        setLowerViewContainer()
+//        setWatchNow()
         setSignInWith()
         setFooter()
         setCreateAccount()
+        setTextBox()
         set_fb_go_errorLoginLabel()
     }
     
@@ -295,9 +315,9 @@ extension LoginController{
         cyaImage.translatesAutoresizingMaskIntoConstraints = false
         
         cyaImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        cyaImage.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 50).isActive = true
-        cyaImage.heightAnchor.constraint(equalToConstant: 90).isActive = true
-        cyaImage.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        cyaImage.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 40).isActive = true
+        cyaImage.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        cyaImage.widthAnchor.constraint(equalToConstant: 110).isActive = true
         
         cyaImage.image = UIImage(named: "cya_icon_l")
         cyaImage.contentMode = .scaleAspectFit
@@ -306,131 +326,105 @@ extension LoginController{
     func setSignInButton(){
         
         viewContent.addSubview(signInButton)
-        viewContent.addSubview(orContainer)
+        
+        
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        signInButton.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        signInButtonYcenter = signInButton.centerYAnchor.constraint(equalTo: viewContent.centerYAnchor, constant: -25)
+        signInButtonYcenter?.isActive = true
+        
+        
+        signInButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
+        signInButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        
+        signInButton.layer.masksToBounds = true
+        signInButton.layer.cornerRadius = 19
+        signInButton.titleLabel?.font = FontCya.CyaTitlesH3Light
+        signInButton.setTitleColor(.black, for: .normal)
+        signInButton.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        signInButton.setTitle("Sign In", for: .normal)
+    }
+    
+    func setLowerViewContainer(){
+        viewContent.addSubview(lowerViewContainer)
+        
+        lowerViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        lowerViewContainer.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 0).isActive = true
+        lowerViewContainer.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: -50).isActive = true
+        lowerViewContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
+        lowerViewContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
+    }
+    
+//    func setWatchNow(){
+//        viewContent.addSubview(watchContainer)
+//        watchContainer.addSubview(watchNowButton)
+//
+//        watchContainer.translatesAutoresizingMaskIntoConstraints = false
+//        watchNowButton.translatesAutoresizingMaskIntoConstraints = false
+//
+//        watchContainer.topAnchor.constraint(equalTo: cyaImage.bottomAnchor, constant: 0).isActive = true
+//        watchContainer.bottomAnchor.constraint(equalTo: signInButton.topAnchor, constant: 0).isActive = true
+//        watchContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
+//        watchContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
+//
+//        watchNowButton.layer.masksToBounds = true
+//        watchNowButton.centerXAnchor.constraint(equalTo: watchContainer.centerXAnchor, constant: 0).isActive = true
+//        watchNowButton.centerYAnchor.constraint(equalTo: watchContainer.centerYAnchor, constant: 0).isActive = true
+//        watchNowButton.widthAnchor.constraint(equalToConstant: 210).isActive = true
+//        watchNowButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+//
+//        watchNowButton.titleLabel?.font = FontCya.CyaTextField
+//        watchNowButton.setTitleColor(.cyaMagenta, for: .normal)
+//        watchNowButton.addTarget(self, action: #selector(watchNowButtonAction), for: .touchUpInside)
+//        watchNowButton.setTitle("Watch Now", for: .normal)
+//        watchNowButton.backgroundColor = UIColor.white
+//    }
+    
+    func setSignInWith(){
+        
+//        viewContent.addSubview(signInWithContainer)
+//        signInWithContainer.addSubview(signInWithLabel)
+        lowerViewContainer.addSubview(googleButton)
+        lowerViewContainer.addSubview(facebookButton)
+        lowerViewContainer.addSubview(orContainer)
         orContainer.addSubview(lineLeft)
         orContainer.addSubview(lineRight)
         orContainer.addSubview(orLaber)
         
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
+//        signInWithContainer.translatesAutoresizingMaskIntoConstraints = false
+//        signInWithLabel.translatesAutoresizingMaskIntoConstraints = false
+        googleButton.translatesAutoresizingMaskIntoConstraints = false
+        facebookButton.translatesAutoresizingMaskIntoConstraints = false
         orContainer.translatesAutoresizingMaskIntoConstraints = false
         lineLeft.translatesAutoresizingMaskIntoConstraints = false
         lineRight.translatesAutoresizingMaskIntoConstraints = false
         orLaber.translatesAutoresizingMaskIntoConstraints = false
         
-        signInButton.layer.masksToBounds = true
-        signInButton.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
-        signInButtonYcenter = signInButton.centerYAnchor.constraint(equalTo: viewContent.centerYAnchor, constant: 20)
-        signInButtonYcenter?.isActive = true
+//        signInWithContainer.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 0).isActive = true
+//        signInWithContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+//        signInWithContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+//        signInWithContainer.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        
-        signInButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
-        signInButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        signInButton.titleLabel?.font = FontCya.CyaTextField
-        signInButton.setTitleColor(.white, for: .normal)
-        signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
-        signInButton.setTitle("Sign In", for: .normal)
-        
-        
-        orContainer.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 15).isActive = true
-        orContainer.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        orContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
-        orContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
-        
-        
-        orLaber.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
-        orLaber.centerXAnchor.constraint(equalTo: orContainer.centerXAnchor, constant: 0).isActive = true
-        orLaber.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        orLaber.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        
-        orLaber.textColor = UIColor.white
-        orLaber.numberOfLines = 0
-        orLaber.textAlignment = .center
-        orLaber.lineBreakMode = .byWordWrapping
-        orLaber.sizeToFit()
-        orLaber.text = "or"
-        orLaber.font = FontCya.CyaBody
-        
-//        let stringInput = "<h2>or</h2>"
-//        let stringHTML =  String(describing: stringInput.convertHtml())
-//        orLaber.attributedText = stringInput.attributedText(text: stringHTML, color: UIColor.cyaMagenta, ofSize: 23, nameFont: "Avenir")
-        
-        
-        
-        lineLeft.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
-        lineLeft.rightAnchor.constraint(equalTo: orLaber.leftAnchor, constant: -10).isActive = true
-        lineLeft.widthAnchor.constraint(equalToConstant: 110).isActive = true
-        lineLeft.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        lineLeft.backgroundColor = UIColor.white
-        
-        
-        lineRight.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
-        lineRight.leftAnchor.constraint(equalTo: orLaber.rightAnchor, constant: 10).isActive = true
-        lineRight.widthAnchor.constraint(equalToConstant: 110).isActive = true
-        lineRight.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        lineRight.backgroundColor = UIColor.white
-    }
-    
-    func setWatchNow(){
-        viewContent.addSubview(watchContainer)
-        watchContainer.addSubview(watchNowButton)
-        
-        watchContainer.translatesAutoresizingMaskIntoConstraints = false
-        watchNowButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        watchContainer.topAnchor.constraint(equalTo: cyaImage.bottomAnchor, constant: 0).isActive = true
-        watchContainer.bottomAnchor.constraint(equalTo: signInButton.topAnchor, constant: 0).isActive = true
-        watchContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
-        watchContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
-        
-        watchNowButton.layer.masksToBounds = true
-        watchNowButton.centerXAnchor.constraint(equalTo: watchContainer.centerXAnchor, constant: 0).isActive = true
-        watchNowButton.centerYAnchor.constraint(equalTo: watchContainer.centerYAnchor, constant: 0).isActive = true
-        watchNowButton.widthAnchor.constraint(equalToConstant: 210).isActive = true
-        watchNowButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        
-        watchNowButton.titleLabel?.font = FontCya.CyaTextField
-        watchNowButton.setTitleColor(.cyaMagenta, for: .normal)
-        watchNowButton.addTarget(self, action: #selector(watchNowButtonAction), for: .touchUpInside)
-        watchNowButton.setTitle("Watch Now", for: .normal)
-        watchNowButton.backgroundColor = UIColor.white
-    }
-    
-    func setSignInWith(){
-        
-        viewContent.addSubview(signInWithContainer)
-        signInWithContainer.addSubview(signInWithLabel)
-        signInWithContainer.addSubview(googleButton)
-        signInWithContainer.addSubview(facebookButton)
-        
-        signInWithContainer.translatesAutoresizingMaskIntoConstraints = false
-        signInWithLabel.translatesAutoresizingMaskIntoConstraints = false
-        googleButton.translatesAutoresizingMaskIntoConstraints = false
-        facebookButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        signInWithContainer.topAnchor.constraint(equalTo: orLaber.bottomAnchor, constant: 15).isActive = true
-        signInWithContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        signInWithContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        signInWithContainer.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        signInWithLabel.topAnchor.constraint(equalTo: signInWithContainer.topAnchor, constant: 15).isActive = true
-        signInWithLabel.centerXAnchor.constraint(equalTo: signInWithContainer.centerXAnchor, constant: 0).isActive = true
-        signInWithLabel.leftAnchor.constraint(equalTo: signInWithContainer.leftAnchor, constant: 0).isActive = true
-        signInWithLabel.rightAnchor.constraint(equalTo: signInWithContainer.rightAnchor, constant: 0).isActive = true
-        
-        signInWithLabel.textColor = UIColor.cyaMagenta
-        signInWithLabel.numberOfLines = 0
-        signInWithLabel.textAlignment = .center
-        signInWithLabel.lineBreakMode = .byWordWrapping
-        signInWithLabel.sizeToFit()
-        signInWithLabel.text = "Sign in with..."
-        signInWithLabel.font = FontCya.CyaBody
+//        signInWithLabel.topAnchor.constraint(equalTo: signInWithContainer.topAnchor, constant: 15).isActive = true
+//        signInWithLabel.centerXAnchor.constraint(equalTo: signInWithContainer.centerXAnchor, constant: 0).isActive = true
+//        signInWithLabel.leftAnchor.constraint(equalTo: signInWithContainer.leftAnchor, constant: 0).isActive = true
+//        signInWithLabel.rightAnchor.constraint(equalTo: signInWithContainer.rightAnchor, constant: 0).isActive = true
+//
+//        signInWithLabel.textColor = UIColor.cyaMagenta
+//        signInWithLabel.numberOfLines = 0
+//        signInWithLabel.textAlignment = .center
+//        signInWithLabel.lineBreakMode = .byWordWrapping
+//        signInWithLabel.sizeToFit()
+//        signInWithLabel.text = "Sign in with..."
+//        signInWithLabel.font = FontCya.CyaBody
         
         
 //        googleButton.layer.masksToBounds = true
-        googleButton.topAnchor.constraint(equalTo: signInWithLabel.bottomAnchor, constant: 15).isActive = true
+        googleButton.bottomAnchor.constraint(equalTo: lowerViewContainer.centerYAnchor, constant: 0).isActive = true
         googleButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         googleButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         googleButton.rightAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: -10).isActive = true
@@ -450,7 +444,7 @@ extension LoginController{
         
         
         facebookButton.layer.masksToBounds = true
-        facebookButton.topAnchor.constraint(equalTo: signInWithLabel.bottomAnchor, constant: 16).isActive = true
+        facebookButton.bottomAnchor.constraint(equalTo: lowerViewContainer.centerYAnchor, constant: 0).isActive = true
         facebookButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         facebookButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         facebookButton.leftAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 10).isActive = true
@@ -460,6 +454,41 @@ extension LoginController{
         facebookButton.addTarget(self, action: #selector(facebookLogin), for: .touchUpInside)
         facebookButton.setImage(UIImage(named: "facebook-icon"), for: .normal)
         facebookButton.imageView?.contentMode = .scaleAspectFit
+        
+        
+        orContainer.bottomAnchor.constraint(equalTo: facebookButton.topAnchor, constant: -20).isActive = true
+        orContainer.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        orContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
+        orContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
+        
+        
+        orLaber.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
+        orLaber.centerXAnchor.constraint(equalTo: orContainer.centerXAnchor, constant: 0).isActive = true
+        orLaber.widthAnchor.constraint(equalToConstant: 73).isActive = true
+        orLaber.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+        orLaber.textColor = UIColor.white
+        orLaber.numberOfLines = 0
+        orLaber.textAlignment = .center
+        orLaber.lineBreakMode = .byWordWrapping
+        orLaber.sizeToFit()
+        orLaber.text = "Or Sign In With"
+        orLaber.font = FontCya.CyaTitlesS9Light
+        
+        lineLeft.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
+        lineLeft.rightAnchor.constraint(equalTo: orLaber.leftAnchor, constant: 0).isActive = true
+        lineLeft.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lineLeft.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        lineLeft.backgroundColor = UIColor.white
+        
+        
+        lineRight.centerYAnchor.constraint(equalTo: orContainer.centerYAnchor, constant: 0).isActive = true
+        lineRight.leftAnchor.constraint(equalTo: orLaber.rightAnchor, constant: 0).isActive = true
+        lineRight.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lineRight.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        lineRight.backgroundColor = UIColor.white
     }
     
     func set_fb_go_errorLoginLabel(){
@@ -484,23 +513,23 @@ extension LoginController{
     
     func setTextBox(){
         
-        signInWithContainer.isHidden = true
-        watchContainer.isHidden = true
-        signInButtonYcenter?.constant = 50
-        createAccountButtonYcenter?.isActive = false
-        createAccountContainerTop?.isActive = false
-        
-        createAccountContainerLogInTop = createAccountContainer.topAnchor.constraint(equalTo: orLaber.bottomAnchor, constant: 0)
-        createAccountContainerLogInTop?.isActive = true
-        
-        createAccountButtonTop = createAccountButton.topAnchor.constraint(equalTo: orLaber.bottomAnchor, constant: 20)
-        createAccountButtonTop?.isActive = true
-        
+//        signInWithContainer.isHidden = true
+//        watchContainer.isHidden = true
+//        signInButtonYcenter?.constant = 50
+//        createAccountButtonYcenter?.isActive = false
+//        createAccountContainerTop?.isActive = false
+//
+//        createAccountContainerLogInTop = createAccountContainer.topAnchor.constraint(equalTo: orLaber.bottomAnchor, constant: 0)
+//        createAccountContainerLogInTop?.isActive = true
+//
+//        createAccountButtonTop = createAccountButton.topAnchor.constraint(equalTo: orLaber.bottomAnchor, constant: 20)
+//        createAccountButtonTop?.isActive = true
+//
         self.view.layoutIfNeeded()
         
         
         viewContent.addSubview(textFielContainer)
-        viewContent.addSubview(passwordTextField)
+        textFielContainer.addSubview(passwordTextField)
         textFielContainer.addSubview(emailTextField)
         textFielContainer.addSubview(errorLoginLabel)
         textFielContainer.addSubview(forgotPasswordButton)
@@ -518,20 +547,19 @@ extension LoginController{
         textFielContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
         
         
-        passwordTextField.leftAnchor.constraint(equalTo: textFielContainer.leftAnchor, constant: 30).isActive = true
-        passwordTextField.rightAnchor.constraint(equalTo: textFielContainer.rightAnchor, constant: -30).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo: textFielContainer.leftAnchor, constant: 40).isActive = true
+        passwordTextField.rightAnchor.constraint(equalTo: textFielContainer.rightAnchor, constant: -40).isActive = true
         passwordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        passwordTextField.topAnchor.constraint(equalTo: textFielContainer.centerYAnchor, constant: 10).isActive = true
+        passwordTextField.topAnchor.constraint(equalTo: textFielContainer.centerYAnchor, constant: 5).isActive = true
+        
         
         passwordTextField.text = "qwe12160***"
         passwordTextField.font = FontCya.CyaTextField
-        passwordTextField.backgroundColor = UIColor.white
-        passwordTextField.placeholder = "   password"
-        passwordTextField.layer.masksToBounds = true
-        passwordTextField.textColor = UIColor.gray
-        passwordTextField.layer.cornerRadius = 12
+        passwordTextField.textColor = UIColor.blue
         passwordTextField.isSecureTextEntry = true
         passwordTextField.delegate = self
+        passwordTextField.textAlignment = .center
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue])
         
         passwordTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
         passwordTextField.leftViewMode = UITextFieldViewMode.always
@@ -553,21 +581,18 @@ extension LoginController{
         errorLoginLabel.isHidden = true
 
 
-        emailTextField.leftAnchor.constraint(equalTo: textFielContainer.leftAnchor, constant: 30).isActive = true
-        emailTextField.rightAnchor.constraint(equalTo: textFielContainer.rightAnchor, constant: -30).isActive = true
-        emailTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -35).isActive = true
+        emailTextField.leftAnchor.constraint(equalTo: textFielContainer.leftAnchor, constant: 40).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: textFielContainer.rightAnchor, constant: -40).isActive = true
+        emailTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -30).isActive = true
         emailTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         emailTextField.text = "rigo_sony@hotmail.com"
         emailTextField.font = FontCya.CyaTextField
-        emailTextField.backgroundColor = UIColor.white
-        emailTextField.placeholder = "   email"
-        emailTextField.layer.masksToBounds = true
-        emailTextField.textColor = UIColor.gray
-        emailTextField.layer.cornerRadius = 12
+        emailTextField.textColor = UIColor.blue
         emailTextField.keyboardType = UIKeyboardType.emailAddress
-        
         emailTextField.delegate = self
+        emailTextField.textAlignment = .center
+        emailTextField.attributedPlaceholder = NSAttributedString(string: "username / email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue])
         
        
         emailTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
@@ -577,9 +602,9 @@ extension LoginController{
         emailTextField.rightViewMode = UITextFieldViewMode.always
         
         
-        forgotPasswordButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
+        forgotPasswordButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 0).isActive = true
         forgotPasswordButton.leftAnchor.constraint(equalTo: passwordTextField.leftAnchor, constant: 5).isActive = true
-        forgotPasswordButton.rightAnchor.constraint(equalTo: passwordTextField.rightAnchor, constant: -5).isActive = true
+        forgotPasswordButton.rightAnchor.constraint(equalTo: passwordTextField.rightAnchor, constant: 0).isActive = true
         
         forgotPasswordButton.titleLabel?.font = FontCya.CyaBody
         forgotPasswordButton.setTitleColor(.cyaMagenta, for: .normal)
@@ -591,47 +616,122 @@ extension LoginController{
     func setCreateAccount(){
         viewContent.addSubview(createAccountContainer)
         createAccountContainer.addSubview(createAccountButton)
+        createAccountContainer.addSubview(watchContainer)
+        watchContainer.addSubview(watchNowButton)
         
         createAccountContainer.translatesAutoresizingMaskIntoConstraints = false
         createAccountButton.translatesAutoresizingMaskIntoConstraints = false
+        watchContainer.translatesAutoresizingMaskIntoConstraints = false
+        watchNowButton.translatesAutoresizingMaskIntoConstraints = false
         
         createAccountContainerTop = createAccountContainer.topAnchor.constraint(equalTo: facebookButton.bottomAnchor, constant: 0)
         createAccountContainerTop?.isActive = true
-        createAccountContainer.bottomAnchor.constraint(equalTo: footerView.termsButton.topAnchor, constant: 0).isActive = true
+        createAccountContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor, constant: 0).isActive = true
         createAccountContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
         createAccountContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
         
         createAccountButton.layer.masksToBounds = true
         createAccountButton.centerXAnchor.constraint(equalTo: createAccountContainer.centerXAnchor, constant: 0).isActive = true
         
-        createAccountButtonYcenter = createAccountButton.centerYAnchor.constraint(equalTo: createAccountContainer.centerYAnchor, constant: 0)
+        createAccountButtonYcenter = createAccountButton.centerYAnchor.constraint(equalTo: createAccountContainer.centerYAnchor, constant: -35)
         createAccountButtonYcenter?.isActive = true
         
         createAccountButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
         createAccountButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        createAccountButton.titleLabel?.font = FontCya.CyaTextField
+        createAccountButton.titleLabel?.font = FontCya.CyaTitlesH3Light
         createAccountButton.setTitleColor(.white, for: .normal)
         createAccountButton.addTarget(self, action: #selector(createAccountAction), for: .touchUpInside)
         createAccountButton.setTitle("Create Account", for: .normal)
+        
+        
+        watchContainer.topAnchor.constraint(equalTo: createAccountButton.bottomAnchor, constant: 0).isActive = true
+        watchContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor, constant: 0).isActive = true
+        watchContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor).isActive = true
+        watchContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor).isActive = true
+        
+        watchNowButton.layer.masksToBounds = true
+        watchNowButton.centerXAnchor.constraint(equalTo: watchContainer.centerXAnchor, constant: 0).isActive = true
+        watchNowButton.centerYAnchor.constraint(equalTo: watchContainer.centerYAnchor, constant: 0).isActive = true
+        watchNowButton.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        watchNowButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        watchNowButton.titleLabel?.font = FontCya.CyaTitlesH3Light
+        watchNowButton.setTitleColor(.white, for: .normal)
+        watchNowButton.addTarget(self, action: #selector(watchNowButtonAction), for: .touchUpInside)
+        watchNowButton.setTitle("Skip", for: .normal)
     }
     
     func setFooter(){
         
-        viewContent.addSubview(footerView)
+//        viewContent.addSubview(footerView)
+//
+//        footerView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        footerView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
+//        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+//        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+//        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+//        footerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//
+//
+//        footerView.footerLabel.textColor = UIColor.cyaMagenta
+//        footerView.termsButton.setTitleColor(UIColor.cyaMagenta, for: .normal)
+//        footerView.privacy.setTitleColor(UIColor.cyaMagenta, for: .normal)
         
-        footerView.translatesAutoresizingMaskIntoConstraints = false
         
-        footerView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: -15).isActive = true
-        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
-        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        footerView.heightAnchor.constraint(equalToConstant: 57).isActive = true
         
-
-        footerView.footerLabel.textColor = UIColor.cyaMagenta
-        footerView.termsButton.setTitleColor(UIColor.cyaMagenta, for: .normal)
-        footerView.privacy.setTitleColor(UIColor.cyaMagenta, for: .normal)
+        view.addSubview(footerBackground)
+        viewContent.addSubview(footerContainer)
+        
+        footerContainer.addSubview(footerLabel)
+        footerContainer.addSubview(footerVersionLabel)
+        
+        
+        footerContainer.translatesAutoresizingMaskIntoConstraints = false
+        footerBackground.translatesAutoresizingMaskIntoConstraints = false
+        footerLabel.translatesAutoresizingMaskIntoConstraints = false
+        footerVersionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        footerBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        footerBackground.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        footerBackground.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        footerBackground.topAnchor.constraint(equalTo: footerContainer.bottomAnchor, constant: 0).isActive = true
+        
+        
+        footerContainer.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
+        footerContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        footerContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        footerContainer.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        
+        footerLabel.topAnchor.constraint(equalTo: footerContainer.topAnchor, constant: 15).isActive = true
+        footerLabel.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        
+        footerVersionLabel.topAnchor.constraint(equalTo: footerLabel.topAnchor, constant: 15).isActive = true
+        footerVersionLabel.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        
+        
+        footerContainer.backgroundColor = UIColor.darkGray
+        footerBackground.backgroundColor = UIColor.darkGray
+        
+        
+        footerLabel.textColor = UIColor.white
+        footerLabel.numberOfLines = 0
+        footerLabel.textAlignment = .center
+        footerLabel.lineBreakMode = .byWordWrapping
+        footerLabel.sizeToFit()
+        footerLabel.text = "@CyaLive 2018. All Rights Reserver. CyaLive"
+        footerLabel.font = FontCya.CyaTitlesS9Light
+        
+        footerVersionLabel.textColor = UIColor.white
+        footerVersionLabel.numberOfLines = 0
+        footerVersionLabel.textAlignment = .center
+        footerVersionLabel.lineBreakMode = .byWordWrapping
+        footerVersionLabel.sizeToFit()
+        footerVersionLabel.text = "V1.0"
+        footerVersionLabel.font = FontCya.CyaTitlesS9Light
     }
 }
 

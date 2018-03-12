@@ -461,7 +461,7 @@ extension EventDetail {
         let isDateEvent = compareEventDate(dateEvent: detailEvent.end_at!)
         
         if (!isDateEvent){
-            let viewcontroller : UIViewController = StageViewController(sigService: self.sigService!, eventId: self.detailEvent.id!)
+            let viewcontroller : UIViewController = PreStageController(sigService: self.sigService!, eventId: self.detailEvent.id!)
             self.show(viewcontroller, sender: nil)
             
             

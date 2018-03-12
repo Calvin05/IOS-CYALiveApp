@@ -14,6 +14,9 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchFooter: SearchFooter!
     @IBOutlet weak var tableView: UITableView!
+    var viewContent: UIView = UIView()
+    var headerContainer: UIView = UIView()
+    var headerBackground: UIView = UIView()
     
     var isSearching = false
     
@@ -28,23 +31,20 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     // MARK: - View Setup
     override func viewDidLoad() {
         super.viewDidLoad()
+//        setupView()
         setUpEvents()
         setUpSearchBar()
         alterLayout()
-        
         setBottomBar()
         viewConstraint()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        super.viewWillAppear(animated)
         if let selectionIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
-
-        super.viewWillAppear(animated)
+//        scrollTable(animatedScroll: false)
     }
     
     override func didReceiveMemoryWarning() {
@@ -88,11 +88,11 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         // Setup the search footer
         tableView.tableFooterView = searchFooter
         
-        tableView.tableHeaderView = UIView()
+//        tableView.tableHeaderView = UIView()
         // search bar in section header
-        tableView.estimatedSectionHeaderHeight = 50
+//        tableView.estimatedSectionHeaderHeight = 50
         // search bar in navigation bar
-        navigationItem.titleView = searchBar
+//        navigationItem.titleView = searchBar
         searchBar.placeholder = "Search"
         searchBar.showsScopeBar = true
         searchBar.scopeButtonTitles = ["LATEST", "UPCOMING", "LIVE NOW", "MY EVENTS"]
@@ -101,6 +101,8 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         searchBar.tintColor = UIColor.clear
         
         
+        tableView.tableHeaderView = self.searchBar
+        scrollTable(animatedScroll: false)
         
         // Selected text
         let titleTextAttributesSelected = [NSAttributedStringKey.foregroundColor: UIColor.cyaMagenta, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue, NSAttributedStringKey.underlineColor: UIColor.cyaMagenta] as [NSAttributedStringKey : Any]
@@ -137,7 +139,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
         tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 110).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
         
     }
@@ -150,12 +152,36 @@ extension EventListHomeViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListEventsCell", for: indexPath) as! ListEventsCell
         
+        
+        
         let event: Event
         if isSearching {
             event = filteredEvents[indexPath.row]
         } else {
             event = events[indexPath.row]
         }
+        
+        
+        
+        if(event.roles?.count != 0){
+            let layout = UICollectionViewFlowLayout()
+            cell.avatarRoles = AvatarView(collectionViewLayout: layout, avatarArray: (event.roles)!)
+            self.addChildViewController(cell.avatarRoles!)
+            cell.contentRoles.addSubview(cell.avatarRoles!.view)
+            
+            cell.avatarRoles!.view.translatesAutoresizingMaskIntoConstraints = false
+            
+            cell.avatarRoles!.view.topAnchor.constraint(equalTo: cell.contentRoles.topAnchor, constant: 0).isActive = true
+            cell.avatarRoles!.view.leftAnchor.constraint(equalTo: cell.contentRoles.leftAnchor, constant: 0).isActive = true
+            cell.avatarRoles!.view.rightAnchor.constraint(equalTo: cell.contentRoles.rightAnchor, constant: 0).isActive = true
+            cell.avatarRoles!.view.bottomAnchor.constraint(equalTo: cell.contentRoles.bottomAnchor, constant: 0).isActive = true
+            cell.avatarRoles!.didMove(toParentViewController: self)
+        }
+        
+        
+        
+        
+        
         
         cell.titleEvent.text = events[indexPath.row].title!
         if (events[indexPath.row].start_at != nil ){
@@ -171,7 +197,20 @@ extension EventListHomeViewController {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 320
+        
+        let event: Event
+        if isSearching {
+            event = filteredEvents[indexPath.row]
+        } else {
+            event = events[indexPath.row]
+        }
+        
+        if(event.roles?.count == 0){
+            return 320
+        }else{
+            return 420
+        }
+        
     }
     
     func scrollTable(animatedScroll: Bool){
@@ -208,6 +247,7 @@ extension EventListHomeViewController{
         if searchBar.text == nil || searchBar.text == "" {
             isSearching = false
             view.endEditing(true)
+            self.filteredEvents = self.events
             tableView.reloadData()
         }
         else {
@@ -256,6 +296,52 @@ extension EventListHomeViewController{
         let listItem = _eventService.getEventList(offset: offset, limit: limit, state: state)
         self.events = listItem.items!
         self.filteredEvents = self.events
+    }
+}
+
+extension EventListHomeViewController {
+    func setupView(){
+        setViewContent()
+        setHeader()
+    }
+    
+    func setViewContent(){
+        self.view.addSubview(viewContent)
+        
+        let marginGuide = view.layoutMarginsGuide
+        
+        viewContent.bottomAnchor.constraint(equalTo: marginGuide.bottomAnchor).isActive = true
+        viewContent.topAnchor.constraint(equalTo: marginGuide.topAnchor, constant: -20).isActive = true
+        viewContent.leftAnchor.constraint(equalTo: marginGuide.leftAnchor, constant: -20).isActive = true
+        viewContent.rightAnchor.constraint(equalTo: marginGuide.rightAnchor, constant: 20).isActive = true
+        viewContent.translatesAutoresizingMaskIntoConstraints       = false
+        
+        viewContent.backgroundColor = UIColor.white
+    }
+    
+    func setHeader(){
+    
+        view.addSubview(headerContainer)
+        view.addSubview(headerBackground)
+        
+        headerContainer.translatesAutoresizingMaskIntoConstraints = false
+        headerBackground.translatesAutoresizingMaskIntoConstraints = false
+        
+        headerContainer.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        headerContainer.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 0).isActive = true
+        headerContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        headerContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        
+        headerContainer.backgroundColor = UIColor.cyaMagenta
+        
+        
+        headerBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        headerBackground.bottomAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 0).isActive = true
+        headerBackground.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        headerBackground.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        
+        headerBackground.backgroundColor = UIColor.cyaMagenta
+        
     }
 }
 
