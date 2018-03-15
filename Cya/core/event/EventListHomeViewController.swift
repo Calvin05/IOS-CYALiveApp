@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SDWebImage
+
 
 class EventListHomeViewController:UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
@@ -15,8 +17,18 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     @IBOutlet weak var searchFooter: SearchFooter!
     @IBOutlet weak var tableView: UITableView!
     var viewContent: UIView = UIView()
+    
     var headerContainer: UIView = UIView()
     var headerBackground: UIView = UIView()
+    var searchButton: UIButton = UIButton()
+    var profileButton: UIButton = UIButton()
+    var liveButton: UIButton = UIButton()
+    var upComingButton: UIButton = UIButton()
+    var pastButton: UIButton = UIButton()
+    var searchContainer: UIView = UIView()
+    var searchTextFiel: UITextField = UITextField()
+    var searchActive: Bool = false
+    var avatarImage: UIImageView = UIImageView()
     
     var isSearching = false
     
@@ -31,12 +43,11 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     // MARK: - View Setup
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupView()
+        setupView()
         setUpEvents()
         setUpSearchBar()
         alterLayout()
         setBottomBar()
-        viewConstraint()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +56,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
 //        scrollTable(animatedScroll: false)
+        profileButton.setImage(avatarImage.image, for: .normal)
     }
     
     override func didReceiveMemoryWarning() {
@@ -88,7 +100,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         // Setup the search footer
         tableView.tableFooterView = searchFooter
         
-//        tableView.tableHeaderView = UIView()
+        tableView.tableHeaderView = UIView()
         // search bar in section header
 //        tableView.estimatedSectionHeaderHeight = 50
         // search bar in navigation bar
@@ -101,8 +113,8 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         searchBar.tintColor = UIColor.clear
         
         
-        tableView.tableHeaderView = self.searchBar
-        scrollTable(animatedScroll: false)
+//        tableView.tableHeaderView = self.searchBar
+//        scrollTable(animatedScroll: false)
         
         // Selected text
         let titleTextAttributesSelected = [NSAttributedStringKey.foregroundColor: UIColor.cyaMagenta, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue, NSAttributedStringKey.underlineColor: UIColor.cyaMagenta] as [NSAttributedStringKey : Any]
@@ -128,22 +140,67 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
 
     // MARK: - Private instance methods
     
-
-    func  viewConstraint(){
-        
-        let marginGuide = view.layoutMarginsGuide
-        
-        tableView.register(ListEventsCell.self, forCellReuseIdentifier: "ListEventsCell")
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
-        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
-        
-        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
-        
+    @objc func profile(){
+        if(UserDisplayObject.username == ""){
+            
+            UserDisplayObject.token = ""
+            UserDisplayObject.userId = ""
+            UserDisplayObject.authorization = ""
+            UserDisplayObject.avatar = ""
+            UserDisplayObject.username = ""
+            
+            var HomeView: UIStoryboard!
+            HomeView = UIStoryboard(name: "Auth", bundle: nil)
+            let homeGo : UIViewController = HomeView.instantiateViewController(withIdentifier: "LoginSignupVC") as UIViewController
+            
+            self.show(homeGo, sender: nil)
+        }else{
+            let viewcontroller : GralInfoController = GralInfoController()
+            self.show(viewcontroller, sender: nil)
+        }
     }
     
+    @objc func openCloseSearch(){
+        if(searchActive){
+            searchActive = false
+            searchContainer.isHidden = true
+        }else{
+            searchActive = true
+            searchContainer.isHidden = false
+        }
+    }
+    
+    @objc func selectFilterEvents(sender: UIButton){
+        switch sender.tag {
+        // searchBar.scopeButtonTitles = ["LATEST", "UPCOMING", "LIVE NOW", "MY EVENTS"]
+        case 0:
+            filterEvents(offset: 0, limit: 50, state: 0)
+        case 1:
+            filterEvents(offset: 0, limit: 50, state: 1)
+        case 2:
+            filterEvents(offset: 0, limit: 50, state: 2)
+        case 3:
+            filterEvents(offset: 0, limit: 30, state: 3)
+        default:
+            break
+        }
+        tableView.reloadData()
+        
+        scrollTable(animatedScroll: false)
+    }
+    
+    @objc func searchTextFieldDidChange(messageInput: UITextField){
+        
+        if (messageInput.text != nil && messageInput.text != "" && messageInput.text?.trimmingCharacters(in: .whitespaces) != ""){
+            filteredEvents = events.filter({ _event -> Bool in
+                return _event.title!.lowercased().contains(messageInput.text!.lowercased())
+            })
+            tableView.reloadData()
+        }else{
+            filteredEvents = events
+            tableView.reloadData()
+        }
+    }
     
 }
 
@@ -152,16 +209,12 @@ extension EventListHomeViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListEventsCell", for: indexPath) as! ListEventsCell
         
-        
-        
         let event: Event
         if isSearching {
             event = filteredEvents[indexPath.row]
         } else {
             event = events[indexPath.row]
         }
-        
-        
         
         if(event.roles?.count != 0){
             let layout = UICollectionViewFlowLayout()
@@ -178,11 +231,6 @@ extension EventListHomeViewController {
             cell.avatarRoles!.didMove(toParentViewController: self)
         }
         
-        
-        
-        
-        
-        
         cell.titleEvent.text = events[indexPath.row].title!
         if (events[indexPath.row].start_at != nil ){
             cell.TimeEvent.text = NSString.convertFormatOfDate(date: events[indexPath.row].start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "EEEE, dd MMMM ,yyyy")
@@ -191,8 +239,6 @@ extension EventListHomeViewController {
         cell.imageAvatar.downloadedFrom(defaultImage: "thumb-logo", link: events[indexPath.row].thumbnail!)
         cell.descriptionEvent.text = events[indexPath.row].description
         
-//        cell.selectionStyle = .none
-//        cell.selectionStyle = UITableViewCellSelectionStyle.none
         return cell
     }
     
@@ -256,7 +302,7 @@ extension EventListHomeViewController{
         }
 
     }
-//
+    
     func filterContentForSearchText(_ searchText: String) {
         filteredEvents = events.filter({ _event -> Bool in
             return _event.title!.lowercased().contains(searchText.lowercased())
@@ -303,6 +349,9 @@ extension EventListHomeViewController {
     func setupView(){
         setViewContent()
         setHeader()
+        setButtonsHeader()
+        setSearch()
+        setTable()
     }
     
     func setViewContent(){
@@ -321,14 +370,16 @@ extension EventListHomeViewController {
     
     func setHeader(){
     
-        view.addSubview(headerContainer)
+        viewContent.addSubview(headerContainer)
         view.addSubview(headerBackground)
+        
         
         headerContainer.translatesAutoresizingMaskIntoConstraints = false
         headerBackground.translatesAutoresizingMaskIntoConstraints = false
         
-        headerContainer.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        headerContainer.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 0).isActive = true
+        
+        headerContainer.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        headerContainer.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 20).isActive = true
         headerContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
         headerContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
         
@@ -341,8 +392,143 @@ extension EventListHomeViewController {
         headerBackground.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
         
         headerBackground.backgroundColor = UIColor.cyaMagenta
+    }
+    
+    func setButtonsHeader(){
+        
+        headerContainer.addSubview(searchButton)
+        headerContainer.addSubview(liveButton)
+        headerContainer.addSubview(upComingButton)
+        headerContainer.addSubview(pastButton)
+        headerContainer.addSubview(profileButton)
+        
+        
+        searchButton.translatesAutoresizingMaskIntoConstraints = false
+        liveButton.translatesAutoresizingMaskIntoConstraints = false
+        upComingButton.translatesAutoresizingMaskIntoConstraints = false
+        pastButton.translatesAutoresizingMaskIntoConstraints = false
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        searchButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        searchButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        searchButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        searchButton.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 10).isActive = true
+        
+        searchButton.setImage(UIImage(named: "cya-search"), for: .normal)
+        searchButton.imageView?.contentMode = .scaleAspectFit
+        searchButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        searchButton.addTarget(self, action: #selector(openCloseSearch), for: .touchUpInside)
+        
+        
+        liveButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        liveButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        liveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        liveButton.rightAnchor.constraint(equalTo: upComingButton.leftAnchor, constant: -10).isActive = true
+        
+        liveButton.titleLabel?.font = FontCya.CyaBody
+        liveButton.setTitleColor(.white, for: .normal)
+        liveButton.tag = 2
+        liveButton.addTarget(self, action: #selector(selectFilterEvents), for: .touchUpInside)
+        liveButton.setTitle("Live", for: .normal)
+        
+        
+        upComingButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        upComingButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        upComingButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        upComingButton.centerXAnchor.constraint(equalTo: headerContainer.centerXAnchor, constant: -25).isActive = true
+        
+        upComingButton.titleLabel?.font = FontCya.CyaBody
+        upComingButton.setTitleColor(.white, for: .normal)
+        upComingButton.tag = 1
+        upComingButton.addTarget(self, action: #selector(selectFilterEvents), for: .touchUpInside)
+        upComingButton.setTitle("Upcoming", for: .normal)
+        
+        
+        pastButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        pastButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        pastButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        pastButton.leftAnchor.constraint(equalTo: upComingButton.rightAnchor, constant: 10).isActive = true
+        
+        pastButton.titleLabel?.font = FontCya.CyaBody
+        pastButton.setTitleColor(.white, for: .normal)
+        pastButton.tag = 0
+        pastButton.addTarget(self, action: #selector(selectFilterEvents), for: .touchUpInside)
+        pastButton.setTitle("Past", for: .normal)
+        
+        
+        profileButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        profileButton.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -20).isActive = true
+        
+        avatarImage.sd_setImage(with: URL(string: UserDisplayObject.avatar), placeholderImage: UIImage(named: "cya-profile-gray-s"))
+        
+        profileButton.imageView?.contentMode = .scaleAspectFit
+        profileButton.layer.cornerRadius = 15
+        profileButton.layer.masksToBounds = true
+        profileButton.addTarget(self, action: #selector(profile), for: .touchUpInside)
+    }
+    
+    func setSearch(){
+        
+        headerContainer.addSubview(searchContainer)
+        searchContainer.addSubview(searchTextFiel)
+        
+        searchContainer.isHidden = true
+        
+        searchContainer.translatesAutoresizingMaskIntoConstraints = false
+        searchTextFiel.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        searchContainer.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 3).isActive = true
+        searchContainer.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -3).isActive = true
+        searchContainer.rightAnchor.constraint(equalTo: headerContainer.rightAnchor, constant: -15).isActive = true
+        searchContainer.leftAnchor.constraint(equalTo: searchButton.rightAnchor, constant: 0).isActive = true
+        
+        searchContainer.backgroundColor = UIColor.cyaLightGrayBg
+        
+        
+        searchContainer.layer.masksToBounds = true
+        searchContainer.layer.cornerRadius = 4
+        
+        
+        searchTextFiel.topAnchor.constraint(equalTo: searchContainer.topAnchor, constant: 5).isActive = true
+        searchTextFiel.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor, constant: -5).isActive = true
+        searchTextFiel.rightAnchor.constraint(equalTo: searchContainer.rightAnchor, constant: -5).isActive = true
+        searchTextFiel.leftAnchor.constraint(equalTo: searchContainer.leftAnchor, constant: 25).isActive = true
+        
+        searchTextFiel.backgroundColor = UIColor.white
+        
+        searchTextFiel.font = FontCya.CyaTitlesH5Light
+        searchTextFiel.backgroundColor = UIColor.white
+        searchTextFiel.placeholder = "Search Events"
+        searchTextFiel.layer.masksToBounds = true
+        searchTextFiel.borderStyle = UITextBorderStyle.bezel
+        searchTextFiel.textColor = UIColor.black
+        searchTextFiel.layer.borderWidth = 1
+        searchTextFiel.layer.cornerRadius = 4
+        searchTextFiel.layer.borderColor = UIColor.lightGray.cgColor
+        
+        searchTextFiel.addTarget(self, action: #selector(searchTextFieldDidChange), for: .editingChanged)
+        
         
     }
+    
+    func setTable(){
+        
+        viewContent.addSubview(tableView)
+        
+        tableView.register(ListEventsCell.self, forCellReuseIdentifier: "ListEventsCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        tableView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: 0).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: -50).isActive = true
+    }
+    
 }
 
 

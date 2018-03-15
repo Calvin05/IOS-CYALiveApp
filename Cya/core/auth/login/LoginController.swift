@@ -555,11 +555,11 @@ extension LoginController{
         
         passwordTextField.text = "qwe12160***"
         passwordTextField.font = FontCya.CyaTextField
-        passwordTextField.textColor = UIColor.blue
+        passwordTextField.textColor = UIColor.white
         passwordTextField.isSecureTextEntry = true
         passwordTextField.delegate = self
         passwordTextField.textAlignment = .center
-        passwordTextField.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue])
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         
         passwordTextField.leftView = paddingUITextField(x: 0, y: 0, width: 15, height: Int(self.emailTextField.frame.height))
         passwordTextField.leftViewMode = UITextFieldViewMode.always
@@ -588,7 +588,7 @@ extension LoginController{
         
         emailTextField.text = "rigo_sony@hotmail.com"
         emailTextField.font = FontCya.CyaTextField
-        emailTextField.textColor = UIColor.blue
+        emailTextField.textColor = UIColor.white
         emailTextField.keyboardType = UIKeyboardType.emailAddress
         emailTextField.delegate = self
         emailTextField.textAlignment = .center
@@ -775,6 +775,11 @@ extension LoginController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.activeTextField = textField
+        textField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        textField.backgroundColor = UIColor.clear
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

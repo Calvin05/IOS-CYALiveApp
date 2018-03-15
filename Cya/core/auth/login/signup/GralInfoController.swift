@@ -11,15 +11,30 @@ import UIKit
 class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var viewContent: UIView = UIView()
-    var gradientLayer: CAGradientLayer = CAGradientLayer()
-    var cyaImage: UIImageView = UIImageView()
     
-    var avatarContainer: UIView = UIView()
+    var headerView: UIView = UIView()
+    var headerViewBackground: UIView = UIView()
+    var headerLabel: EdgeInsetLabel = EdgeInsetLabel()
+    var headerIcon: UIImageView = UIImageView()
+    
     var avatarButton: UIButton = UIButton()
     var avatarImage: UIImage?
     
+    var userNameLabel: EdgeInsetLabel = EdgeInsetLabel()
+    var userNameTextFiel: UITextField = UITextField()
+    
+    var firstNameLabel: EdgeInsetLabel = EdgeInsetLabel()
     var firstNameTextField: UITextField = UITextField()
+    
+    var lastNameLabel: EdgeInsetLabel = EdgeInsetLabel()
     var lastNameTextField: UITextField = UITextField()
+    
+    var emailLabel: EdgeInsetLabel = EdgeInsetLabel()
+    var emailTextField: UITextField = UITextField()
+    
+    var passwordLabel: EdgeInsetLabel = EdgeInsetLabel()
+    var passwordTextField: UITextField = UITextField()
+    
     var dobTextField: UITextField = UITextField()
     var datePicker: UIDatePicker = UIDatePicker()
     var aboutMeTextField: UITextView = UITextView()
@@ -27,12 +42,13 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
     var genderContainer: UIView = UIView()
     var femaleButton: UIButton = UIButton()
     var maleButton: UIButton = UIButton()
+    var otherButton: UIButton = UIButton()
     
     var errorLabel: EdgeInsetLabel = EdgeInsetLabel()
     
     var gender: String = "F"
     
-    var skipContainer: UIView = UIView()
+    var doneContainer: UIView = UIView()
     var skipButton: UIButton = UIButton(type: .system) as UIButton
     var doneButton: UIButton = UIButton(type: .system) as UIButton
     
@@ -42,30 +58,80 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
     var uploadAvatar: Bool = false
     
     var footerView: FooterViewComponent = FooterViewComponent()
+    var toolBarMenu: ToolBarMenu = ToolBarMenu()
+    
+    var user: User = User()
+    var userService: UserService = UserService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        user = userService.getUserById(userId: UserDisplayObject.userId)
         self.setupView()
         notificationKeyboard()
     }
     
-    @objc func setFemaleValue(){
-        gender = "F"
-        maleButton.setTitleColor(.cyaMagenta, for: .normal)
-        maleButton.backgroundColor = UIColor.clear
-        
-        femaleButton.setTitleColor(.white, for: .normal)
-        femaleButton.backgroundColor = UIColor.cyaMagenta
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        updateText()
     }
     
-    @objc func setMaleValue(){
-        gender = "M"
-        maleButton.setTitleColor(.white, for: .normal)
-        maleButton.backgroundColor = UIColor.cyaMagenta
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         
-        femaleButton.setTitleColor(.cyaMagenta, for: .normal)
-        femaleButton.backgroundColor = UIColor.clear
+        userNameTextFiel.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+        firstNameTextField.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+        lastNameTextField.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+        emailTextField.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+        passwordTextField.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+        dobTextField.underline(color: UIColor.darkGray, borderWidth: CGFloat(1.0))
+    }
+    
+    func updateText(){
+        
+        
+        userNameTextFiel.text = user.username
+        firstNameTextField.text = user.first_name
+        lastNameTextField.text = user.last_name
+        emailTextField.text = user.email
+        passwordTextField.text = user.password
+        dobTextField.text = user.dob
+        
+        let buttonTemp = UIButton()
+        if(user.gender == "F"){
+            buttonTemp.tag = 0
+            self.setGenderValue(sender: buttonTemp)
+        }else if(user.gender == "M"){
+            buttonTemp.tag = 1
+            self.setGenderValue(sender: buttonTemp)
+        }else if(user.gender == "O"){
+            buttonTemp.tag = 2
+            self.setGenderValue(sender: buttonTemp)
+        }
+        
+        
+    }
+    
+    @objc func setGenderValue(sender: UIButton){
+        switch sender.tag {
+        case 0:
+            femaleButton.setImage(UIImage(named: "cya_radio_on"), for: .normal)
+            maleButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            otherButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            gender = "F"
+        case 1:
+            femaleButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            maleButton.setImage(UIImage(named: "cya_radio_on"), for: .normal)
+            otherButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            gender = "M"
+        case 2:
+            femaleButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            maleButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+            otherButton.setImage(UIImage(named: "cya_radio_on"), for: .normal)
+            gender = "O"
+        default:
+            break
+        }
     }
     
     @objc func skipAction(){
@@ -109,7 +175,7 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
             }
         }
 
-        let userService: UserService = UserService()
+        
 
         let dataObject: AnyObject = userService.userUpdate(user: userGralInfo)
 
@@ -168,18 +234,22 @@ extension GralInfoController{
     
     func setupView(){
         
-        view.backgroundColor = UIColor.gray
+        view.backgroundColor = UIColor.cyaLightGrayBg
         
-        setGradientLayer()
         setViewContent()
-        setCyaImage()
-        setTextField()
+        setHeader()
+        
         setDatePicker()
         setAvatar()
+        setTextField()
         setGender()
+        
         setErrorMessage()
-        setFooter()
-        setSkipButton()
+//        setFooter()
+        
+        setBottomBar()
+        setDoneButton()
+        
         
        
     }
@@ -198,49 +268,73 @@ extension GralInfoController{
         viewContent.backgroundColor = UIColor.clear
     }
     
-    func setGradientLayer(){
+    func setHeader(){
         
-        self.view.layer.addSublayer(gradientLayer)
+        view.addSubview(headerView)
+        view.addSubview(headerViewBackground)
+        headerView.addSubview(headerIcon)
+        headerView.addSubview(headerLabel)
         
-        gradientLayer.frame = self.view.bounds
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
-        gradientLayer.locations = [0.3, 1.2]
-    }
-    
-    func setCyaImage(){
-        viewContent.addSubview(cyaImage)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerViewBackground.translatesAutoresizingMaskIntoConstraints = false
+        headerIcon.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        cyaImage.translatesAutoresizingMaskIntoConstraints = false
         
-        cyaImage.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        cyaImage.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 30).isActive = true
-        cyaImage.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        cyaImage.widthAnchor.constraint(equalToConstant: 65).isActive = true
+        headerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        headerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        headerView.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 20).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        cyaImage.image = UIImage(named: "cya_icon")
-        cyaImage.contentMode = .scaleAspectFit
+        headerView.backgroundColor = UIColor.cyaMagenta
+        
+        
+        headerViewBackground.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
+        headerViewBackground.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
+        headerViewBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        headerViewBackground.bottomAnchor.constraint(equalTo: headerView.topAnchor, constant: 0).isActive = true
+
+        headerViewBackground.backgroundColor = UIColor.cyaMagenta
+        
+        
+        headerLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor, constant: 0).isActive = true
+        headerLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 3).isActive = true
+        headerLabel.widthAnchor.constraint(equalToConstant: 110).isActive = true
+        
+        headerLabel.textColor = UIColor.white
+        headerLabel.numberOfLines = 0
+        headerLabel.textAlignment = .center
+        headerLabel.lineBreakMode = .byWordWrapping
+        headerLabel.sizeToFit()
+        headerLabel.text = "User Profile"
+        headerLabel.font = FontCya.CyaInput
+        
+        
+        headerIcon.centerYAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 0).isActive = true
+        headerIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        headerIcon.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        headerIcon.rightAnchor.constraint(equalTo: headerLabel.leftAnchor, constant: -10).isActive = true
+
+        headerIcon.image = UIImage(named: "cya-profile-gray-s")
+        headerIcon.contentMode = .scaleAspectFit
+        headerIcon.layer.masksToBounds = true
+
+        
     }
     
     func setAvatar(){
         
-        viewContent.addSubview(avatarContainer)
-        avatarContainer.addSubview(avatarButton)
+        viewContent.addSubview(avatarButton)
         
         avatarButton.translatesAutoresizingMaskIntoConstraints = false
-        avatarContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        avatarContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
-        avatarContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
-        avatarContainer.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 0).isActive = true
-        avatarContainer.bottomAnchor.constraint(equalTo: firstNameTextField.topAnchor, constant: 0).isActive = true
+        avatarButton.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+        avatarButton.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 15).isActive = true
+        avatarButton.heightAnchor.constraint(equalToConstant: 110).isActive = true
+        avatarButton.widthAnchor.constraint(equalToConstant: 110).isActive = true
         
-        avatarButton.centerXAnchor.constraint(equalTo: avatarContainer.centerXAnchor, constant: 0).isActive = true
-        avatarButton.centerYAnchor.constraint(equalTo: avatarContainer.centerYAnchor, constant: 20).isActive = true
-        avatarButton.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        avatarButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        avatarButton.layer.cornerRadius = 50
-        avatarButton.setImage(UIImage(named: "profile"), for: .normal)
+        avatarButton.layer.cornerRadius = 55
+        avatarButton.setImage(UIImage(named: "cya-profile-gray-s"), for: .normal)
         avatarButton.layer.masksToBounds = true
         avatarButton.imageView?.contentMode = .scaleAspectFit
         avatarButton.addTarget(self, action: #selector(avatarButtonAction), for: .touchUpInside)
@@ -248,70 +342,163 @@ extension GralInfoController{
     
     func setTextField(){
         
-        viewContent.addSubview(dobTextField)
-        viewContent.addSubview(lastNameTextField)
+        viewContent.addSubview(userNameLabel)
+        viewContent.addSubview(userNameTextFiel)
+        viewContent.addSubview(firstNameLabel)
         viewContent.addSubview(firstNameTextField)
+        viewContent.addSubview(lastNameLabel)
+        viewContent.addSubview(lastNameTextField)
+        viewContent.addSubview(emailLabel)
+        viewContent.addSubview(emailTextField)
+        viewContent.addSubview(passwordLabel)
+        viewContent.addSubview(passwordTextField)
+        viewContent.addSubview(dobTextField)
+        
         viewContent.addSubview(aboutMeTextField)
         
-        dobTextField.translatesAutoresizingMaskIntoConstraints = false
-        lastNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        userNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        userNameTextFiel.translatesAutoresizingMaskIntoConstraints = false
+        firstNameLabel.translatesAutoresizingMaskIntoConstraints = false
         firstNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        lastNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        lastNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailLabel.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordLabel.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        dobTextField.translatesAutoresizingMaskIntoConstraints = false
+        
         aboutMeTextField.translatesAutoresizingMaskIntoConstraints = false
         
         
-        dobTextField.centerYAnchor.constraint(equalTo: viewContent.centerYAnchor, constant: -10).isActive = true
-        dobTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        dobTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        dobTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        userNameLabel.topAnchor.constraint(equalTo: avatarButton.bottomAnchor, constant: 0).isActive = true
+        userNameLabel.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         
-        dobTextField.font = FontCya.CyaTextField
-        dobTextField.backgroundColor = UIColor.white
-        dobTextField.placeholder = "   Date of Birth"
-        dobTextField.layer.masksToBounds = true
-        dobTextField.textColor = UIColor.gray
-        dobTextField.layer.cornerRadius = 12
+        userNameLabel.textColor = UIColor.gray
+        userNameLabel.numberOfLines = 0
+        userNameLabel.textAlignment = .center
+        userNameLabel.lineBreakMode = .byWordWrapping
+        userNameLabel.sizeToFit()
+        userNameLabel.text = "User Name"
+        userNameLabel.font = FontCya.CyaTitlesH6Light
         
         
-        lastNameTextField.bottomAnchor.constraint(equalTo: dobTextField.topAnchor, constant: -20).isActive = true
-        lastNameTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        lastNameTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        lastNameTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        userNameTextFiel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 3).isActive = true
+        userNameTextFiel.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        userNameTextFiel.rightAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: -20).isActive = true
         
-        lastNameTextField.font = FontCya.CyaTextField
-        lastNameTextField.backgroundColor = UIColor.white
-        lastNameTextField.placeholder = "   Last Name"
-        lastNameTextField.layer.masksToBounds = true
-        lastNameTextField.textColor = UIColor.gray
-        lastNameTextField.layer.cornerRadius = 12
-        lastNameTextField.delegate = self
+        userNameTextFiel.text = "rigo_sony@hotmail.com"
+        userNameTextFiel.font = FontCya.CyaBody
+        userNameTextFiel.textColor = UIColor.lightGray
+        userNameTextFiel.delegate = self
+        userNameTextFiel.textAlignment = .left
+        userNameTextFiel.isEnabled = false
         
-        firstNameTextField.bottomAnchor.constraint(equalTo: lastNameTextField.topAnchor, constant: -20).isActive = true
+        
+        firstNameLabel.topAnchor.constraint(equalTo: userNameTextFiel.bottomAnchor, constant: 10).isActive = true
+        firstNameLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        firstNameLabel.textColor = UIColor.gray
+        firstNameLabel.numberOfLines = 0
+        firstNameLabel.textAlignment = .right
+        firstNameLabel.lineBreakMode = .byWordWrapping
+        firstNameLabel.sizeToFit()
+        firstNameLabel.text = "First Name"
+        firstNameLabel.font = FontCya.CyaTitlesH5Light
+        
+        
+        firstNameTextField.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 3).isActive = true
         firstNameTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         firstNameTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        firstNameTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        firstNameTextField.font = FontCya.CyaTextField
-        firstNameTextField.backgroundColor = UIColor.white
-        firstNameTextField.placeholder = "   First Name"
+        firstNameTextField.font = FontCya.CyaBody
         firstNameTextField.layer.masksToBounds = true
-        firstNameTextField.textColor = UIColor.gray
-        firstNameTextField.layer.cornerRadius = 12
+        firstNameTextField.textColor = UIColor.black
         firstNameTextField.delegate = self
+        firstNameTextField.textAlignment = .left
         
         
-        aboutMeTextField.topAnchor.constraint(equalTo: dobTextField.bottomAnchor, constant: 20).isActive = true
-        aboutMeTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        aboutMeTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        aboutMeTextField.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        lastNameLabel.topAnchor.constraint(equalTo: firstNameTextField.bottomAnchor, constant: 10).isActive = true
+        lastNameLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
         
-        aboutMeTextField.font = FontCya.CyaTextField
-        aboutMeTextField.backgroundColor = UIColor.white
-
-        aboutMeTextField.placeholder = "About me"
-        aboutMeTextField.layer.masksToBounds = true
-        aboutMeTextField.textColor = UIColor.gray
-        aboutMeTextField.layer.cornerRadius = 12
-        aboutMeTextField.delegate = self
+        lastNameLabel.textColor = UIColor.gray
+        lastNameLabel.numberOfLines = 0
+        lastNameLabel.textAlignment = .right
+        lastNameLabel.lineBreakMode = .byWordWrapping
+        lastNameLabel.sizeToFit()
+        lastNameLabel.text = "Last Name"
+        lastNameLabel.font = FontCya.CyaTitlesH5Light
+        
+        
+        lastNameTextField.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 3).isActive = true
+        lastNameTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        lastNameTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        lastNameTextField.font = FontCya.CyaBody
+        lastNameTextField.layer.masksToBounds = true
+        lastNameTextField.textColor = UIColor.black
+        lastNameTextField.delegate = self
+        lastNameTextField.textAlignment = .left
+        
+        
+        emailLabel.topAnchor.constraint(equalTo: lastNameTextField.bottomAnchor, constant: 10).isActive = true
+        emailLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        emailLabel.textColor = UIColor.gray
+        emailLabel.numberOfLines = 0
+        emailLabel.textAlignment = .right
+        emailLabel.lineBreakMode = .byWordWrapping
+        emailLabel.sizeToFit()
+        emailLabel.text = "Account Email"
+        emailLabel.font = FontCya.CyaTitlesH5Light
+        
+        
+        emailTextField.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 3).isActive = true
+        emailTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        emailTextField.font = FontCya.CyaBody
+        emailTextField.layer.masksToBounds = true
+        emailTextField.textColor = UIColor.black
+        emailTextField.delegate = self
+        emailTextField.textAlignment = .left
+        
+        
+        passwordLabel.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10).isActive = true
+        passwordLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        passwordLabel.textColor = UIColor.gray
+        passwordLabel.numberOfLines = 0
+        passwordLabel.textAlignment = .right
+        passwordLabel.lineBreakMode = .byWordWrapping
+        passwordLabel.sizeToFit()
+        passwordLabel.text = "Account Password"
+        passwordLabel.font = FontCya.CyaTitlesH5Light
+        
+        
+        passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 3).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        passwordTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        passwordTextField.font = FontCya.CyaBody
+        passwordTextField.layer.masksToBounds = true
+        passwordTextField.textColor = UIColor.black
+        passwordTextField.delegate = self
+        passwordTextField.textAlignment = .left
+        passwordTextField.isSecureTextEntry = true
+        
+        
+        dobTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 23).isActive = true
+        dobTextField.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        dobTextField.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        
+        dobTextField.font = FontCya.CyaBody
+        dobTextField.placeholder = "Date of Birth"
+        dobTextField.layer.masksToBounds = true
+        dobTextField.textColor = UIColor.black
+        dobTextField.delegate = self
+        dobTextField.textAlignment = .left
         
     }
     
@@ -333,44 +520,52 @@ extension GralInfoController{
         viewContent.addSubview(genderContainer)
         genderContainer.addSubview(femaleButton)
         genderContainer.addSubview(maleButton)
+        genderContainer.addSubview(otherButton)
         
         genderContainer.translatesAutoresizingMaskIntoConstraints = false
         femaleButton.translatesAutoresizingMaskIntoConstraints = false
         maleButton.translatesAutoresizingMaskIntoConstraints = false
+        otherButton.translatesAutoresizingMaskIntoConstraints = false
         
         genderContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
         genderContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        genderContainer.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        genderContainer.topAnchor.constraint(equalTo: aboutMeTextField.bottomAnchor, constant: 20).isActive = true
+        genderContainer.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        genderContainer.topAnchor.constraint(equalTo: dobTextField.bottomAnchor, constant: 20).isActive = true
         
-        femaleButton.leftAnchor.constraint(equalTo: genderContainer.leftAnchor, constant: 4).isActive = true
-        femaleButton.rightAnchor.constraint(equalTo: genderContainer.centerXAnchor, constant: 0).isActive = true
-        femaleButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        femaleButton.topAnchor.constraint(equalTo: genderContainer.topAnchor, constant: 0).isActive = true
+        femaleButton.leftAnchor.constraint(equalTo: genderContainer.leftAnchor, constant: 0).isActive = true
+        femaleButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        femaleButton.bottomAnchor.constraint(equalTo: genderContainer.bottomAnchor, constant: -5).isActive = true
         
-        femaleButton.setTitle("Female", for: .normal)
-        femaleButton.setTitleColor(.white, for: .normal)
-        femaleButton.titleLabel?.font = FontCya.CyaTitlesH4
-        femaleButton.layer.borderColor = UIColor.cyaMagenta.cgColor
-        femaleButton.layer.cornerRadius = 4
-        femaleButton.layer.borderWidth = 2
-        femaleButton.backgroundColor = UIColor.cyaMagenta
-        femaleButton.addTarget(self, action: #selector(setFemaleValue), for: .touchUpInside)
+        femaleButton.setTitle(" Female", for: .normal)
+        femaleButton.setImage(UIImage(named: "cya_radio_on"), for: .normal)
+        femaleButton.setTitleColor(.black, for: .normal)
+        femaleButton.titleLabel?.font = FontCya.CyaBody
+        femaleButton.tag = 0
+        femaleButton.addTarget(self, action: #selector(setGenderValue), for: .touchUpInside)
         
         
-        maleButton.leftAnchor.constraint(equalTo: genderContainer.centerXAnchor, constant: -4).isActive = true
-        maleButton.rightAnchor.constraint(equalTo: genderContainer.rightAnchor, constant: 0).isActive = true
-        maleButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        maleButton.topAnchor.constraint(equalTo: genderContainer.topAnchor, constant: 0).isActive = true
+        maleButton.leftAnchor.constraint(equalTo: femaleButton.rightAnchor, constant: 10).isActive = true
+        maleButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        maleButton.bottomAnchor.constraint(equalTo: genderContainer.bottomAnchor, constant: -5).isActive = true
         
-        maleButton.setTitle("Male", for: .normal)
-        maleButton.setTitleColor(.cyaMagenta, for: .normal)
-        maleButton.titleLabel?.font = FontCya.CyaTitlesH4
-        maleButton.layer.borderColor = UIColor.cyaMagenta.cgColor
-        maleButton.layer.cornerRadius = 4
-        maleButton.layer.borderWidth = 2
-        maleButton.backgroundColor = UIColor.clear
-        maleButton.addTarget(self, action: #selector(setMaleValue), for: .touchUpInside)
+        maleButton.setTitle(" Male", for: .normal)
+        maleButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+        maleButton.setTitleColor(.black, for: .normal)
+        maleButton.titleLabel?.font = FontCya.CyaBody
+        maleButton.tag = 1
+        maleButton.addTarget(self, action: #selector(setGenderValue), for: .touchUpInside)
+        
+        
+        otherButton.leftAnchor.constraint(equalTo: maleButton.rightAnchor, constant: 10).isActive = true
+        otherButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        otherButton.bottomAnchor.constraint(equalTo: genderContainer.bottomAnchor, constant: -5).isActive = true
+        
+        otherButton.setTitle(" Other", for: .normal)
+        otherButton.setImage(UIImage(named: "cya_radio_off"), for: .normal)
+        otherButton.setTitleColor(.black, for: .normal)
+        otherButton.titleLabel?.font = FontCya.CyaBody
+        otherButton.tag = 2
+        otherButton.addTarget(self, action: #selector(setGenderValue), for: .touchUpInside)
     }
     
     func setErrorMessage(){
@@ -393,59 +588,75 @@ extension GralInfoController{
         errorLabel.font = FontCya.CyaError
     }
     
-    func setSkipButton(){
+    func setDoneButton(){
         
-        viewContent.addSubview(skipContainer)
-        skipContainer.addSubview(skipButton)
-        skipContainer.addSubview(doneButton)
+        viewContent.addSubview(doneContainer)
+//        doneContainer.addSubview(skipButton)
+        doneContainer.addSubview(doneButton)
         
-        skipContainer.translatesAutoresizingMaskIntoConstraints = false
-        skipButton.translatesAutoresizingMaskIntoConstraints = false
+        doneContainer.translatesAutoresizingMaskIntoConstraints = false
+//        skipButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
-        skipContainer.topAnchor.constraint(equalTo: genderContainer.bottomAnchor, constant: 0).isActive = true
-        skipContainer.bottomAnchor.constraint(equalTo: footerView.topAnchor, constant: 0).isActive = true
-        skipContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        skipContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+        doneContainer.topAnchor.constraint(equalTo: genderContainer.bottomAnchor, constant: 0).isActive = true
+        doneContainer.bottomAnchor.constraint(equalTo: toolBarMenu.topAnchor, constant: 0).isActive = true
+        doneContainer.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+        doneContainer.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
         
-        skipButton.layer.masksToBounds = true
-        skipButton.rightAnchor.constraint(equalTo: skipContainer.rightAnchor, constant: -30).isActive = true
-        skipButton.leftAnchor.constraint(equalTo: skipContainer.centerXAnchor, constant: 0).isActive = true
-        skipButton.centerYAnchor.constraint(equalTo: skipContainer.centerYAnchor, constant: 5).isActive = true
-        skipButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        skipButton.layer.masksToBounds = true
+//        skipButton.rightAnchor.constraint(equalTo: doneContainer.rightAnchor, constant: -30).isActive = true
+//        skipButton.leftAnchor.constraint(equalTo: doneContainer.centerXAnchor, constant: 0).isActive = true
+//        skipButton.centerYAnchor.constraint(equalTo: doneContainer.centerYAnchor, constant: 5).isActive = true
+//        skipButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        skipButton.titleLabel?.font = FontCya.CyaTextField
-        skipButton.setTitleColor(.white, for: .normal)
-        skipButton.addTarget(self, action: #selector(skipAction), for: .touchUpInside)
-        skipButton.setTitle("Skip", for: .normal)
+//        skipButton.titleLabel?.font = FontCya.CyaTextField
+//        skipButton.setTitleColor(.white, for: .normal)
+//        skipButton.addTarget(self, action: #selector(skipAction), for: .touchUpInside)
+//        skipButton.setTitle("Skip", for: .normal)
+        
+        
+        doneButton.centerXAnchor.constraint(equalTo: doneContainer.centerXAnchor, constant: 0).isActive = true
+        doneButton.centerYAnchor.constraint(equalTo: doneContainer.centerYAnchor, constant: 5).isActive = true
+        doneButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        doneButton.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        
         
         doneButton.layer.masksToBounds = true
-        doneButton.rightAnchor.constraint(equalTo: skipContainer.centerXAnchor, constant: 0).isActive = true
-        doneButton.leftAnchor.constraint(equalTo: skipContainer.leftAnchor, constant: 30).isActive = true
-        doneButton.centerYAnchor.constraint(equalTo: skipContainer.centerYAnchor, constant: 5).isActive = true
-        doneButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        doneButton.titleLabel?.font = FontCya.CyaTextField
-        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.titleLabel?.font = FontCya.CyaInput
+        doneButton.setTitleColor(.black, for: .normal)
         doneButton.addTarget(self, action: #selector(saveGralInfo), for: .touchUpInside)
         doneButton.setTitle("Done", for: .normal)
+        doneButton.layer.cornerRadius = 15
+        doneButton.layer.borderColor = UIColor.lightGray.cgColor
+        doneButton.layer.borderWidth = 1
+        
     }
     
-    func setFooter(){
+//    func setFooter(){
+//
+//        viewContent.addSubview(footerView)
+//
+//        footerView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        footerView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
+//        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
+//        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
+//        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
+//        footerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+//
+//        footerView.footerLabel.textColor = UIColor.white
+//        footerView.termsButton.setTitleColor(UIColor.white, for: .normal)
+//        footerView.privacy.setTitleColor(UIColor.white, for: .normal)
+//    }
+    
+    func setBottomBar(){
         
-        viewContent.addSubview(footerView)
-        
-        footerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        footerView.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor, constant: 0).isActive = true
-        footerView.centerXAnchor.constraint(equalTo: viewContent.centerXAnchor, constant: 0).isActive = true
-        footerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 30).isActive = true
-        footerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -30).isActive = true
-        footerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        footerView.footerLabel.textColor = UIColor.white
-        footerView.termsButton.setTitleColor(UIColor.white, for: .normal)
-        footerView.privacy.setTitleColor(UIColor.white, for: .normal)
+        toolBarMenu.setCurrenView(currentView: "Settings")
+        toolBarMenu.setParentView(parentView: self)
+        view.addSubview(toolBarMenu)
+        toolBarMenu.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        toolBarMenu.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
+
     }
     
 }

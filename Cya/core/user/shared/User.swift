@@ -19,5 +19,7 @@ class User: Decodable, Encodable {
     var dob: String?
     var gender: String?
     var deleted: Int?
+    var email: String?
+    var password: String?
     
 }

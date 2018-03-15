@@ -28,6 +28,9 @@ class ToolBarMenu: UIView{
     var rightAnchorArray: [NSLayoutXAxisAnchor] = []
     weak var toolBarMenuDelegate: ToolBarMenuDelegate?
     var isChatSelected: Bool = false
+    var logoutButton: UIButton = UIButton(type: .system) as UIButton
+    var eventListButton: UIButton = UIButton()
+    var avatarImage: UIImageView = UIImageView()
     
     var isSettings: Bool = false
     
@@ -38,6 +41,7 @@ class ToolBarMenu: UIView{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        avatarImage.sd_setImage(with: URL(string: UserDisplayObject.avatar), placeholderImage: UIImage(named: "cya-profile-gray-s"))
         setToolBarMenu()
     }
     
@@ -48,26 +52,34 @@ class ToolBarMenu: UIView{
     func setCurrenView(currentView: String){
         switch currentView {
         case "Stage":
+//            setLeftIcon()
+            setEventListButton()
             setSettingsButton()
             setViewersButton()
-            setChatButton()
-            setStageButton()
             setInfoButton()
+            setStageButton()
+            setChatButton()
             setButtonPressed(button: "stage")
         case "PreStage":
+//            setLeftIcon()
+            setEventListButton()
             setSettingsButton()
             setChatButton()
             setStageButton()
             setInfoButton()
             setButtonPressed(button: "stage")
         case "Settings":
-            setSettingsButton()
-            setButtonPressed(button: "settings")
-            isSettings = true
+//            setSettingsButton()
+//            setButtonPressed(button: "settings")
+//            isSettings = true
+            setLeftIcon()
+            setLogoutButton()
+        case "Event":
+            setCenterIcon()
             
         default:
-            setSettingsButton()
-            
+//            setSettingsButton()
+            setLeftIcon()
         }
     }
     
@@ -93,7 +105,10 @@ class ToolBarMenu: UIView{
     @objc func settingsButtonAction(sender:UIButton!) {
         setButtonPressed(button: "settings")
         if(!isSettings){
-            let viewcontroller : SettingsController = SettingsController()
+//            let viewcontroller : SettingsController = SettingsController()
+//            self.parentView?.show(viewcontroller, sender: nil)
+            
+            let viewcontroller : GralInfoController = GralInfoController()
             self.parentView?.show(viewcontroller, sender: nil)
         }
     }
@@ -124,6 +139,20 @@ class ToolBarMenu: UIView{
         self.parentView?.show(viewcontroller, sender: nil)
     }
     
+    @objc func logout(){
+        UserDisplayObject.token = ""
+        UserDisplayObject.userId = ""
+        UserDisplayObject.authorization = ""
+        UserDisplayObject.avatar = ""
+        UserDisplayObject.username = ""
+        
+        var HomeView: UIStoryboard!
+        HomeView = UIStoryboard(name: "Auth", bundle: nil)
+        let homeGo : UIViewController = HomeView.instantiateViewController(withIdentifier: "LoginSignupVC") as UIViewController
+        
+        self.parentView?.show(homeGo, sender: nil)
+    }
+    
 }
 
 // MARK: -  Setup View
@@ -131,20 +160,12 @@ extension ToolBarMenu{
     
     func setToolBarMenu(){
         
-        self.backgroundColor = UIColor.darkGray
-        
+        self.backgroundColor = UIColor.white
         
         
         self.addSubview(cya_icon)
         
         cya_icon.translatesAutoresizingMaskIntoConstraints = false
-        cya_icon.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5).isActive = true
-        cya_icon.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
-        cya_icon.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        cya_icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        
-//        cya_icon.image = UIImage(named: "cya_icon")
-//        cya_icon.contentMode = .scaleAspectFit
         
         cya_icon.setImage(UIImage(named: "cya_icon"), for: .normal)
         cya_icon.imageView?.contentMode = .scaleAspectFit
@@ -152,6 +173,37 @@ extension ToolBarMenu{
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func setLeftIcon(){
+        cya_icon.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        cya_icon.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        cya_icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        cya_icon.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5).isActive = true
+    }
+    
+    func setCenterIcon(){
+        cya_icon.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        cya_icon.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        cya_icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        cya_icon.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
+    }
+    
+    func setEventListButton(){
+        
+        self.addSubview(eventListButton)
+        
+        eventListButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        eventListButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        eventListButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        eventListButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        eventListButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+        
+        eventListButton.setImage(UIImage(named: "cya-event-list-gray"), for: .normal)
+        eventListButton.imageView?.contentMode = .scaleAspectFit
+        eventListButton.addTarget(self, action: #selector(cyaButtonAction), for: .touchUpInside)
+        
     }
     
     func setInfoButton(){
@@ -165,7 +217,7 @@ extension ToolBarMenu{
         
         infoButton.translatesAutoresizingMaskIntoConstraints = false
         infoButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
-        infoButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        infoButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
         infoButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         infoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -200,7 +252,7 @@ extension ToolBarMenu{
         
         stageButton.translatesAutoresizingMaskIntoConstraints = false
         stageButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
-        stageButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        stageButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
         stageButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         stageButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -217,9 +269,9 @@ extension ToolBarMenu{
         
         chatButton.translatesAutoresizingMaskIntoConstraints = false
         chatButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
-        chatButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        chatButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
-        chatButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        chatButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        chatButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        chatButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
         viewNotification.backgroundColor = .clear
         viewNotification.layer.masksToBounds = true
@@ -239,15 +291,18 @@ extension ToolBarMenu{
     
     func setSettingsButton(){
         
-        settingsButton.setImage(UIImage(named: "cya_settings"), for: .normal)
+        settingsButton.setImage(avatarImage.image, for: .normal)
+//        settingsButton.setImage(UIImage(named: "cya-profile-gray-s"), for: .normal)
         settingsButton.imageView?.contentMode = .scaleAspectFit
         settingsButton.addTarget(self, action: #selector(settingsButtonAction), for: .touchUpInside)
+        settingsButton.layer.cornerRadius = 15
+        settingsButton.layer.masksToBounds = true
         
         self.addSubview(settingsButton)
         
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
         settingsButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
-        settingsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        settingsButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
         settingsButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         settingsButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -256,7 +311,7 @@ extension ToolBarMenu{
     
     func setViewersButton(){
         
-        viewersButton.setImage(UIImage(named: "cya_canvas"), for: .normal)
+        viewersButton.setImage(UIImage(named: "cya-profile-gray-s"), for: .normal)
         viewersButton.imageView?.contentMode = .scaleAspectFit
         viewersButton.addTarget(self, action: #selector(viewersButtonAction), for: .touchUpInside)
         
@@ -264,11 +319,33 @@ extension ToolBarMenu{
         
         viewersButton.translatesAutoresizingMaskIntoConstraints = false
         viewersButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
-        viewersButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        viewersButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
         viewersButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         viewersButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
         rightAnchorArray.append(viewersButton.leftAnchor)
+    }
+    
+    func setLogoutButton(){
+        
+        self.addSubview(logoutButton)
+        
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        logoutButton.rightAnchor.constraint(equalTo: getRrightAnchorItem(), constant: getConstantRightAnchor()).isActive = true
+        logoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        logoutButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        logoutButton.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        
+        
+        logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        logoutButton.titleLabel?.font = FontCya.CyaBody
+        logoutButton.setTitleColor(.darkGray, for: .normal)
+        logoutButton.setTitle("Logout", for: .normal)
+        
+        
+        rightAnchorArray.append(logoutButton.leftAnchor)
     }
     
     
@@ -276,7 +353,7 @@ extension ToolBarMenu{
     func getConstantRightAnchor() -> CGFloat{
         let constantRightAnchor: CGFloat?
         if(rightAnchorArray.count == 0){
-            constantRightAnchor = -8
+            constantRightAnchor = -15
         }else{
             constantRightAnchor = -20
         }
@@ -303,8 +380,11 @@ extension ToolBarMenu{
         infoButton.setImage(UIImage(named: "cya_info"), for: .normal)
         stageButton.setImage(UIImage(named: "cya_stage"), for: .normal)
         chatButton.setImage(UIImage(named: "cya_chat"), for: .normal)
-        settingsButton.setImage(UIImage(named: "cya_settings"), for: .normal)
-        viewersButton.setImage(UIImage(named: "cya_canvas"), for: .normal)
+        
+        settingsButton.setImage(avatarImage.image, for: .normal)
+//        settingsButton.setImage(UIImage(named: "cya_settings"), for: .normal)
+        
+        viewersButton.setImage(UIImage(named: "cya-profile-gray-s"), for: .normal)
         
         
         switch button {
@@ -317,9 +397,10 @@ extension ToolBarMenu{
             isChatSelected = true
             viewNotification.backgroundColor = UIColor.clear
         case "settings":
-            settingsButton.setImage(UIImage(named: "cya_settings_pressed"), for: .normal)
+            settingsButton.setImage(avatarImage.image, for: .normal)
+//            settingsButton.setImage(UIImage(named: "cya_settings_pressed"), for: .normal)
         case "viewers":
-            viewersButton.setImage(UIImage(named: "cya_canvas_pressed"), for: .normal)
+            viewersButton.setImage(UIImage(named: "cya-profile-pressed"), for: .normal)
         default:
             print()
         }
