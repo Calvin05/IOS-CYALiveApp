@@ -51,7 +51,7 @@ class SignUpController: UIViewController {
 //        self.show(viewcontroller, sender: nil)
         
         errorLabel.isHidden = true
-        
+
         var userRegister: UserRegisterDisplayObject = UserRegisterDisplayObject()
         userRegister.email = emailTextField.text
         userRegister.password = passwordTextField.text

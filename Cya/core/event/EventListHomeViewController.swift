@@ -192,11 +192,13 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
     @objc func searchTextFieldDidChange(messageInput: UITextField){
         
         if (messageInput.text != nil && messageInput.text != "" && messageInput.text?.trimmingCharacters(in: .whitespaces) != ""){
+            isSearching = true
             filteredEvents = events.filter({ _event -> Bool in
                 return _event.title!.lowercased().contains(messageInput.text!.lowercased())
             })
             tableView.reloadData()
         }else{
+            isSearching = false
             filteredEvents = events
             tableView.reloadData()
         }
@@ -206,6 +208,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
 
     // MARK: - Table View
 extension EventListHomeViewController {
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListEventsCell", for: indexPath) as! ListEventsCell
         
@@ -218,6 +221,7 @@ extension EventListHomeViewController {
         
         if(event.roles?.count != 0){
             let layout = UICollectionViewFlowLayout()
+            cell.contentRoles.subviews.forEach({ $0.removeFromSuperview() })
             cell.avatarRoles = AvatarView(collectionViewLayout: layout, avatarArray: (event.roles)!)
             self.addChildViewController(cell.avatarRoles!)
             cell.contentRoles.addSubview(cell.avatarRoles!.view)
@@ -231,13 +235,15 @@ extension EventListHomeViewController {
             cell.avatarRoles!.didMove(toParentViewController: self)
         }
         
-        cell.titleEvent.text = events[indexPath.row].title!
-        if (events[indexPath.row].start_at != nil ){
-            cell.TimeEvent.text = NSString.convertFormatOfDate(date: events[indexPath.row].start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "EEEE, dd MMMM ,yyyy")
+        cell.titleEvent.text = event.title
+        
+        if (event.start_at != nil ){
+            cell.TimeEvent.text = NSString.convertFormatOfDate(date: event.start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "EEEE, dd MMMM ,yyyy")
         }
         
-        cell.imageAvatar.downloadedFrom(defaultImage: "thumb-logo", link: events[indexPath.row].thumbnail!)
-        cell.descriptionEvent.text = events[indexPath.row].description
+//        cell.imageAvatar.downloadedFrom(defaultImage: "thumb-logo", link: event.thumbnail!)
+        cell.imageAvatar.sd_setImage(with: URL(string: event.thumbnail!), placeholderImage: UIImage(named: "thumb-logo"))
+        cell.descriptionEvent.text = event.description
         
         return cell
     }

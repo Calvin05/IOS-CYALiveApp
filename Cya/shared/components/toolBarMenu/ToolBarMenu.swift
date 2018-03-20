@@ -340,9 +340,9 @@ extension ToolBarMenu{
         
         
         logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
-        logoutButton.titleLabel?.font = FontCya.CyaBody
+        logoutButton.titleLabel?.font = FontCya.CyaTitlesH4Light
         logoutButton.setTitleColor(.darkGray, for: .normal)
-        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.setTitle("Sign Out", for: .normal)
         
         
         rightAnchorArray.append(logoutButton.leftAnchor)

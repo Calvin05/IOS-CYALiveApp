@@ -58,6 +58,7 @@ struct Font {
         case XXL = 36.0
         case h1XL = 30.0
         case back = 26.0
+        case s22 = 22.0
         case h1 = 20.0
         case h2 = 18.0
         case h3 = 16.0
@@ -146,6 +147,7 @@ class FontCya  {
     static let CyaMontMediumH4           = Font(.installed(.MontserratMedium), size: .standard(.h4)).instance // 14
     static let CyaMontMediumH5           = Font(.installed(.MontserratMedium), size: .standard(.h5)).instance // 12
     static let CyaMontMediumH6           = Font(.installed(.MontserratMedium), size: .standard(.h6)).instance // 10
+    static let CyaMontMediumS22           = Font(.installed(.MontserratMedium), size: .standard(.s22)).instance // 22
     
     
     static let CyaTextButtonRegXL    = Font(.installed(.MontserratRegular), size: .standard(.h1XL)).instance// 30
@@ -164,6 +166,9 @@ class FontCya  {
     static let CyaTitlesH6Light      = Font(.installed(.MontserratLight), size: .standard(.h6)).instance // 10
     static let CyaTitlesS8Light      = Font(.installed(.MontserratLight), size: .standard(.s8)).instance // 8
     static let CyaTitlesS9Light      = Font(.installed(.MontserratLight), size: .standard(.s9)).instance // 9
+    
+    
+    static let CyaTitlesH5LightItalic      = Font(.installed(.MontserratItalic), size: .standard(.h5)).instance // 12
     
     static let CyaBody               = Font(.installed(.MontserratLight), size: .standard(.body)).instance      // 13
     static let CyaInput              = Font(.installed(.MontserratLight), size: .standard(.inputText)).instance // 17
