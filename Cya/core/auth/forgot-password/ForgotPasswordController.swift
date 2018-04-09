@@ -48,10 +48,15 @@ class ForgotPasswordController: UIViewController {
             
             
         }catch let error as NSError{
-            returnMessageLabel.isHidden = false
-            returnMessageLabel.text = error.domain
-            returnMessageLabel.textColor = UIColor.cyaMagenta
-            print(error.domain)
+            if(ErrorHelper.error?.code == 500){
+                self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
+            }else{
+                returnMessageLabel.isHidden = false
+                returnMessageLabel.text = error.domain
+                returnMessageLabel.textColor = UIColor.cyaMagenta
+                print(error.domain)
+            }
+            
         }
     }
 
@@ -150,11 +155,17 @@ extension ForgotPasswordController{
         
         emailTextField.font = FontCya.CyaInput
         emailTextField.backgroundColor = UIColor.lightGray
-        emailTextField.placeholder = "   Email"
+        emailTextField.placeholder = "Email"
         emailTextField.layer.masksToBounds = true
         emailTextField.textColor = UIColor.Cya_Event_List_Live_Text_Shadow_Color
         emailTextField.layer.cornerRadius = 12
         emailTextField.keyboardType = .emailAddress
+        
+        emailTextField.leftView = emailTextField.paddingUITextField(x: 0, y: 0, width: 15, height: Int(emailTextField.frame.height))
+        emailTextField.leftViewMode = UITextFieldViewMode.always
+        
+        emailTextField.rightView = emailTextField.paddingUITextField(x: 0, y: 0, width: 12, height: Int(emailTextField.frame.height))
+        emailTextField.rightViewMode = UITextFieldViewMode.always
     }
     
     func setReturnMessageLabel(){

@@ -7,26 +7,40 @@
 //
 
 import Foundation
+import UIKit
 
 struct ErrorHelper {
     
-    private static var error: NSError?
+    static var error: NSError?
     
-    static func validateRequestError(data: Data, res: URLResponse)throws{
+    static func validateRequestError(data: Data?, res: URLResponse?)throws{
         var resStatusCode = 200
         
-        resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-        if(resStatusCode != 200){
+        if(res == nil){
+            setConnectionError()
+            throw self.error!
+        }else{
+            resStatusCode = ((res! as? HTTPURLResponse)?.statusCode)!
+        }
+        
+        if(resStatusCode == 500){
+            setGeneralApiError()
+            throw self.error!
+        }else if(resStatusCode != 200){
             try self.setErrorMessage(data: data)
         }
+        
     }
     
-    static func setErrorMessage(data: Data)throws {
+    static func setErrorMessage(data: Data?)throws {
         var errorResponse: ErrorResponseDisplayObject = ErrorResponseDisplayObject()
         var errorMessage = ""
         
         do{
-            errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data)
+            if(data == nil){
+                throw NSError()
+            }
+            errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data!)
             
             if (errorResponse.code != nil || errorResponse.statusCode != nil){
                 errorMessage = errorResponse.message!
@@ -37,8 +51,7 @@ struct ErrorHelper {
             self.error = NSError(domain: errorMessage, code: 400, userInfo: nil)
             
         }catch {
-            errorMessage = "Connection Error"
-            self.error = NSError(domain: errorMessage, code: 400, userInfo: nil)
+            setGeneralApiError()
             throw self.error!
         }
         
@@ -47,6 +60,14 @@ struct ErrorHelper {
     
     static func setCustomErrorMessage(message: String) {
         self.error = NSError(domain: message, code: 400, userInfo: nil)
+    }
+    
+    static func setConnectionError(){
+        self.error = NSError(domain: "Connection Error", code: 500, userInfo: nil)
+    }
+    
+    static func setGeneralApiError(){
+        self.error = NSError(domain: "Cannot complete this command. Please try again later", code: 500, userInfo: nil)
     }
     
     static func showAlert() -> UIAlertController{

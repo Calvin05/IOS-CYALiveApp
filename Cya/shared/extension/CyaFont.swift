@@ -149,6 +149,8 @@ class FontCya  {
     static let CyaMontMediumH6           = Font(.installed(.MontserratMedium), size: .standard(.h6)).instance // 10
     static let CyaMontMediumS22           = Font(.installed(.MontserratMedium), size: .standard(.s22)).instance // 22
     
+    static let CyaMontRegS22           = Font(.installed(.MontserratRegular), size: .standard(.s22)).instance // 22
+    
     
     static let CyaTextButtonRegXL    = Font(.installed(.MontserratRegular), size: .standard(.h1XL)).instance// 30
     static let CyaTitlesH1           = Font(.installed(.MontserratRegular), size: .standard(.h1)).instance // 20

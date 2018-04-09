@@ -52,7 +52,9 @@ class UserService{
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                user = try JSONDecoder().decode(User.self, from: data!)
+                if(data != nil){
+                    user = try JSONDecoder().decode(User.self, from: data!)
+                }
                 semaphore.signal()
             } catch let err{
                 print(err)
@@ -66,7 +68,7 @@ class UserService{
         return user
     }
     
-    func userUpdate(user: User) -> AnyObject{
+    func userUpdate(user: User)throws -> AnyObject{
         
         let url = "\(userApiUrl)/\(user.user_id!)"
         var request = URLRequest(url: URL(string: url)!)
@@ -84,21 +86,18 @@ class UserService{
         }
         
         var user: UserIdNumber = UserIdNumber()
-        var errorResponse: ErrorResponseDisplayObject = ErrorResponseDisplayObject()
-        var resStatusCode = 200
+        var error = false
         
         let semaphore = DispatchSemaphore(value: 0)
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-                if(resStatusCode != 200){
-                    errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data!)
-                }else{
-                    user = try JSONDecoder().decode(UserIdNumber.self, from: data!)
-                }
+                try ErrorHelper.validateRequestError(data: data, res: res)
+                
+                user = try JSONDecoder().decode(UserIdNumber.self, from: data!)
                 semaphore.signal()
             } catch let err{
+                error = true
                 print(err)
                 semaphore.signal()
             }
@@ -107,8 +106,8 @@ class UserService{
         
         semaphore.wait(timeout: .distantFuture)
         
-        if(resStatusCode != 200){
-            return errorResponse
+        if(error){
+            throw ErrorHelper.error!
         }else{
             return user
         }

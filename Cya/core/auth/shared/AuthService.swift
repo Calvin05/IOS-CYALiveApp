@@ -39,6 +39,7 @@ class AuthService {
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
+                try ErrorHelper.validateRequestError(data: data, res: res)
                 loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
                 semaphore.signal()
             } catch let err{
@@ -54,7 +55,7 @@ class AuthService {
         
     }
     
-    func facebookLogin(token: String) -> LoginDisplayObject{
+    func facebookLogin(token: String, handler: @escaping (LoginDisplayObject?, NSError?) -> Void){
         
         let json: [String: Any] = ["access_token": token]
         
@@ -67,33 +68,21 @@ class AuthService {
         
         var loginDisplayObject: LoginDisplayObject = LoginDisplayObject()
         
-        let semaphore = DispatchSemaphore(value: 0)
-        var resStatusCode = 200
-        var errorResponse: ErrorResponseDisplayObject = ErrorResponseDisplayObject()
-        
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-                if(resStatusCode != 200){
-                    errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data!)
-                }else{
-                    loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
-                }
-                semaphore.signal()
+                try ErrorHelper.validateRequestError(data: data!, res: res!)
+                loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
+                handler(loginDisplayObject, nil)
             } catch let err{
-                print(err)
-                semaphore.signal()
+                ErrorHelper.setGeneralApiError()
+                handler(nil, err as NSError)
             }
         }
         tarea.resume()
         
-        semaphore.wait(timeout: .distantFuture)
-        
-        return loginDisplayObject
-        
     }
     
-    func googleLogin(token: String) -> LoginDisplayObject{
+    func googleLogin(token: String, handler: @escaping (LoginDisplayObject?, NSError?) -> Void) {
         
         let json: [String: Any] = ["access_token": token]
         
@@ -106,33 +95,21 @@ class AuthService {
         
         var loginDisplayObject: LoginDisplayObject = LoginDisplayObject()
         
-        let semaphore = DispatchSemaphore(value: 0)
-        var resStatusCode = 200
-        var errorResponse: ErrorResponseDisplayObject = ErrorResponseDisplayObject()
-        
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-                if(resStatusCode != 200){
-                    errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data!)
-                }else{
-                    loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
-                }
-                semaphore.signal()
+                try ErrorHelper.validateRequestError(data: data!, res: res!)
+                loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
+                handler(loginDisplayObject, nil)
             } catch let err{
-                print(err)
-                semaphore.signal()
+                ErrorHelper.setGeneralApiError()
+                handler(nil, err as NSError)
             }
         }
         tarea.resume()
         
-        semaphore.wait(timeout: .distantFuture)
-        
-        return loginDisplayObject
-        
     }
     
-    func register(userRegister: UserRegisterDisplayObject) -> AnyObject{
+    func register(userRegister: UserRegisterDisplayObject)throws -> AnyObject{
         
         let url = "\(authApiUrl)/register"
         var request = URLRequest(url: URL(string: url)!)
@@ -149,21 +126,19 @@ class AuthService {
         }
         
         var loginDisplayObject: LoginDisplayObject = LoginDisplayObject()
-        var errorResponse: ErrorResponseDisplayObject = ErrorResponseDisplayObject()
-        var resStatusCode = 200
+        var error = false
         
         let semaphore = DispatchSemaphore(value: 0)
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-                if(resStatusCode != 200){
-                    errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data!)
-                }else{
-                    loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
-                }
+                try ErrorHelper.validateRequestError(data: data, res: res)
+                
+                loginDisplayObject = try JSONDecoder().decode(LoginDisplayObject.self, from: data!)
+                
                 semaphore.signal()
             } catch let err{
+                error = true
                 print(err)
                 semaphore.signal()
             }
@@ -172,8 +147,8 @@ class AuthService {
         
         semaphore.wait(timeout: .distantFuture)
         
-        if(resStatusCode != 200){
-            return errorResponse
+        if(error){
+            throw ErrorHelper.error!
         }else{
             return loginDisplayObject
         }
@@ -191,19 +166,17 @@ class AuthService {
         
         request.httpBody = try? JSONSerialization.data(withJSONObject: json)
         
-        var resStatusCode = 200
+        var error = false
         
         let semaphore = DispatchSemaphore(value: 0)
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                resStatusCode = ((res as? HTTPURLResponse)?.statusCode)!
-                if(resStatusCode != 200){
-                    try self.setErrorMessage(data: data!)
-                }
+                try ErrorHelper.validateRequestError(data: data, res: res)
                 
                 semaphore.signal()
             } catch let err{
+                error = true
                 print(err)
                 semaphore.signal()
             }
@@ -212,24 +185,11 @@ class AuthService {
         
         semaphore.wait(timeout: .distantFuture)
         
-        if(resStatusCode != 200){
-            throw self.error!
+        if(error){
+            throw ErrorHelper.error!
         }else{
             return true as AnyObject
         }
-    }
-    
-    func setErrorMessage(data: Data)throws {
-        let errorResponse = try JSONDecoder().decode(ErrorResponseDisplayObject.self, from: data)
-        var errorMessage = ""
-        
-        if (errorResponse.code != nil || errorResponse.statusCode != nil){
-            errorMessage = errorResponse.message!
-        }else{
-            errorMessage = "\(errorResponse.errors![0].errors![0].description!): \(errorResponse.errors![0].errors![0].message!)"
-        }
-        
-        self.error = NSError(domain: errorMessage, code: 400, userInfo: nil)
     }
     
 }

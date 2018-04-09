@@ -45,40 +45,42 @@ class SignUpController: UIViewController {
     }
     
     @objc func createAccountAction(){
-//        var mainView: UIStoryboard!
-//        mainView = UIStoryboard(name: "Auth", bundle: nil)
-//        let viewcontroller : UIViewController = mainView.instantiateViewController(withIdentifier: "GralInfoController") as UIViewController
-//        self.show(viewcontroller, sender: nil)
-        
-        errorLabel.isHidden = true
-
-        var userRegister: UserRegisterDisplayObject = UserRegisterDisplayObject()
-        userRegister.email = emailTextField.text
-        userRegister.password = passwordTextField.text
-        userRegister.username = userNameTextField.text
-
-        let dataObject: AnyObject = authService.register(userRegister: userRegister)
-
-        if let errorResponse = dataObject as? ErrorResponseDisplayObject{
-            setErrorMessage(errorResponse: errorResponse)
-        }else{
+        do{
+            //        var mainView: UIStoryboard!
+            //        mainView = UIStoryboard(name: "Auth", bundle: nil)
+            //        let viewcontroller : UIViewController = mainView.instantiateViewController(withIdentifier: "GralInfoController") as UIViewController
+            //        self.show(viewcontroller, sender: nil)
+            
+            errorLabel.isHidden = true
+            
+            var userRegister: UserRegisterDisplayObject = UserRegisterDisplayObject()
+            userRegister.email = emailTextField.text
+            userRegister.password = passwordTextField.text
+            userRegister.username = userNameTextField.text
+            
+            let dataObject: AnyObject = try authService.register(userRegister: userRegister)
+            
             let loginDisplayObject: LoginDisplayObject = dataObject as! LoginDisplayObject
-
+                
             UserDisplayObject.token = loginDisplayObject.token!
             UserDisplayObject.userId = loginDisplayObject.user_id!
             UserDisplayObject.authorization = "Bearer \(loginDisplayObject.token!)"
-
+            
             let userService: UserService = UserService()
-
+            
             let user: User = userService.getUserById(userId: loginDisplayObject.user_id!)
             UserDisplayObject.avatar = user.avatar!
             UserDisplayObject.username = user.username!
-
+            
             var mainView: UIStoryboard!
             mainView = UIStoryboard(name: "Auth", bundle: nil)
             let viewcontroller : UIViewController = mainView.instantiateViewController(withIdentifier: "GralInfoController") as UIViewController
             self.show(viewcontroller, sender: nil)
+            
+        }catch let err{
+            showErrorMessage()
         }
+
     }
     
     @objc func backAction(){
@@ -86,13 +88,13 @@ class SignUpController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func setErrorMessage(errorResponse: ErrorResponseDisplayObject){
+    func showErrorMessage(){
         errorLabel.isHidden = false
         
-        if (errorResponse.code != nil || errorResponse.statusCode != nil){
-            errorLabel.text = errorResponse.message
+        if(ErrorHelper.error?.code == 500){
+            self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
         }else{
-            errorLabel.text = "\(errorResponse.errors![0].errors![0].description!): \(errorResponse.errors![0].errors![0].message!)"
+            errorLabel.text = ErrorHelper.error?.domain
         }
         
     }

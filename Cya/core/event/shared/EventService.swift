@@ -50,7 +50,7 @@ class EventService{
         return eventContentDisplayObject
     }
     
-    func getEvent(eventId: String) -> Event{
+    func getEvent(eventId: String)throws -> Event{
         
         let url = "\(eventApiUrl)/\(eventId)"
         var request = URLRequest(url: URL(string: url)!)
@@ -59,12 +59,14 @@ class EventService{
         var event: Event = Event()
         
         let semaphore = DispatchSemaphore(value: 0)
-        
+        var error = false
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
+                try ErrorHelper.validateRequestError(data: data, res: res)
                 event = try JSONDecoder().decode(Event.self, from: data!)
                 semaphore.signal()
             } catch let err{
+                error = true
                 print(err)
                 semaphore.signal()
             }
@@ -73,7 +75,11 @@ class EventService{
         
         semaphore.wait(timeout: .distantFuture)
         
-        return event
+        if(error){
+            throw ErrorHelper.error!
+        }else{
+            return event
+        }
     }
     
     func getEventContents2(eventId: String, handler: @escaping (EventContentDisplayObject?, NSError?) -> Void){
@@ -86,7 +92,7 @@ class EventService{
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                try ErrorHelper.validateRequestError(data: data!, res: res!)
+                try ErrorHelper.validateRequestError(data: data, res: res)
                 eventContentDisplayObject = try JSONDecoder().decode(EventContentDisplayObject.self, from: data!)
                 handler(eventContentDisplayObject, nil)
             } catch let err{
@@ -106,7 +112,7 @@ class EventService{
         
         let tarea = URLSession.shared.dataTask(with: request){ (data, res, err) in
             do{
-                try ErrorHelper.validateRequestError(data: data!, res: res!)
+                try ErrorHelper.validateRequestError(data: data, res: res)
                 event = try JSONDecoder().decode(Event.self, from: data!)
                 handler(event, nil)
             } catch let err{

@@ -53,6 +53,7 @@ class ToolBarMenu: UIView{
         switch currentView {
         case "Stage":
 //            setLeftIcon()
+            cya_icon.isHidden = true
             setEventListButton()
             setSettingsButton()
             setViewersButton()

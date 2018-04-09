@@ -19,8 +19,9 @@ target 'Cya' do
   pod 'Firebase/Auth'
   pod 'GoogleSignIn'
   
-  pod 'libjingle_peerconnection'
   pod 'SDWebImage'
+  
+  pod 'LicodeErizoClient'
   
 end
 

@@ -74,19 +74,19 @@ class EditSettingsController: UIViewController, UIImagePickerControllerDelegate,
         
         let userService: UserService = UserService()
         
-        let dataObject: AnyObject = userService.userUpdate(user: userGralInfo)
-        
-        if let errorResponse = dataObject as? ErrorResponseDisplayObject{
-            setErrorMessage(errorResponse: errorResponse)
-        }else{
-            let user: UserIdNumber = dataObject as! UserIdNumber
-            if(user.avatar != nil){
-                UserDisplayObject.avatar = user.avatar!
-                UserDisplayObject.username = user.username!
-            }
-            
-            backButtonView?.backAction()
-        }
+//        let dataObject: AnyObject = userService.userUpdate(user: userGralInfo)
+//        
+//        if let errorResponse = dataObject as? ErrorResponseDisplayObject{
+//            setErrorMessage(errorResponse: errorResponse)
+//        }else{
+//            let user: UserIdNumber = dataObject as! UserIdNumber
+//            if(user.avatar != nil){
+//                UserDisplayObject.avatar = user.avatar!
+//                UserDisplayObject.username = user.username!
+//            }
+//            
+//            backButtonView?.backAction()
+//        }
     }
     
     func setErrorMessage(errorResponse: ErrorResponseDisplayObject){

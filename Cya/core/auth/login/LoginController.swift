@@ -129,7 +129,8 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
         
         FBSDKLoginManager().logIn(withReadPermissions: ["email", "public_profile"], from: self, handler:  {(result, err) in
             if err != nil {
-                print(err)
+                ErrorHelper.setGeneralApiError()
+                self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
                 return
             }
 
@@ -142,12 +143,15 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
 //            })
 
             if(!(result?.isCancelled)!){
-                let loginDisplayObject: LoginDisplayObject = self.authService.facebookLogin(token: (result?.token.tokenString!)!)
-                if(loginDisplayObject.user_id == nil){
-                    self.fb_go_errorLoginLabel.isHidden = false
-                    self.fb_go_errorLoginLabel.text = "Facebook Login Error"
-                }else{
-                    self.startApp(loginDisplayObject: loginDisplayObject)
+                
+                self.authService.facebookLogin(token: (result?.token.tokenString!)!){data, err in
+                    if(err != nil){
+                        self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
+                    }else{
+                        DispatchQueue.main.async {
+                            self.startApp(loginDisplayObject: data!)
+                        }
+                    }
                 }
             }
         })
@@ -170,31 +174,14 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
         print("Successfully logged into Google", user)
         guard let authentication = user.authentication else { return }
         
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        print(authentication.accessToken)
-
-        Auth.auth().signIn(with: credential) { (user, error) in
-            if let error = error {
-                print(error)
-                return
+        self.authService.googleLogin(token: authentication.idToken){data, err in
+            if(err != nil){
+                self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
+            }else{
+                DispatchQueue.main.async {
+                    self.startApp(loginDisplayObject: data!)
+                }
             }
-            user?.getIDToken(completion: { (token, error) in
-                if let error = error {
-                    print(error)
-                    return
-                }
-                
-                let loginDisplayObject: LoginDisplayObject = self.authService.googleLogin(token: token!)
-                
-                if(loginDisplayObject.user_id == nil){
-                    self.fb_go_errorLoginLabel.isHidden = false
-                    self.fb_go_errorLoginLabel.text = "Google Login Error"
-                }else{
-                    self.startApp(loginDisplayObject: loginDisplayObject)
-                }
-                
-            })
         }
     }
     
@@ -204,9 +191,9 @@ class LoginController: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate 
         let loginDisplayObject: LoginDisplayObject = authService.login(email: emailTextField.text!, password: passwordTextField.text!)
         if(loginDisplayObject.user_id == nil){
 //            errorLoginLabel.isHidden = false
-            
+            if(ErrorHelper.error?.code != 500){
                 ErrorHelper.setCustomErrorMessage(message: "There is a problem with your login credentials. Either your username or password is incorrect")
-            
+            }
             
             self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
         }else{
@@ -553,7 +540,7 @@ extension LoginController{
         passwordTextField.topAnchor.constraint(equalTo: textFielContainer.centerYAnchor, constant: 5).isActive = true
         
         
-        passwordTextField.text = "qwe12160***"
+        passwordTextField.text = "testtest"
         passwordTextField.font = FontCya.CyaTextField
         passwordTextField.textColor = UIColor.white
         passwordTextField.isSecureTextEntry = true
@@ -586,7 +573,7 @@ extension LoginController{
         emailTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -30).isActive = true
         emailTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        emailTextField.text = "rigo_sony@hotmail.com"
+        emailTextField.text = "test53@synaptop.com"
         emailTextField.font = FontCya.CyaTextField
         emailTextField.textColor = UIColor.white
         emailTextField.keyboardType = UIKeyboardType.emailAddress

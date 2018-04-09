@@ -68,15 +68,21 @@ class PreStageController: UIViewController {
     }
     
     func setEvent(eventId: String){
-        event = eventService.getEvent(eventId: eventId)
-        
-        if(event?.trailer != nil && (event?.trailer)! != ""){
-            viewHeader.setCurrenView(currentView: "video", data: (event?.trailer)!)
-        }else if (event?.thumbnail != nil && event?.thumbnail != ""){
-            viewHeader.setCurrenView(currentView: "image", data: (event?.thumbnail)!)
-        }else {
-            viewHeader.setCurrenView(currentView: "image", data: "default")
+        do{
+            event = try eventService.getEvent(eventId: eventId)
+            
+            if(event?.trailer != nil && (event?.trailer)! != ""){
+                viewHeader.setCurrenView(currentView: "video", data: (event?.trailer)!)
+            }else if (event?.thumbnail != nil && event?.thumbnail != ""){
+                viewHeader.setCurrenView(currentView: "image", data: (event?.thumbnail)!)
+            }else {
+                viewHeader.setCurrenView(currentView: "image", data: "default")
+            }
+        }catch{
+            self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
+        
     }
     
     func setChatService(){

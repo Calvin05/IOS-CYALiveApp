@@ -139,7 +139,8 @@ class StatusStageView: UIView {
         case "approved":
             self.castService?.leaveStage()
         case "published":
-            self.castService?.declineStage()
+//            self.castService?.declineStage()
+            self.castService?.leaveStage()
         default:
             print("default")
         }

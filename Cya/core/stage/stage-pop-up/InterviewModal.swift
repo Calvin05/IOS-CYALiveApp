@@ -11,8 +11,8 @@ protocol InterviewModalDelegate: class {
 
 import UIKit
 
-class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoViewDelegate {
-    
+//class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoViewDelegate {
+class InterviewModal: UIViewController {
     // MARK: -  Components
     private let textHeader: EdgeInsetLabel = EdgeInsetLabel()
     private let btnCancel = UIButton(type: .system) as UIButton
@@ -20,12 +20,12 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
 //    var wvStages: UIWebView?
     
     
-    var localView: RTCEAGLVideoView = RTCEAGLVideoView()
-    var localVideoTrack: RTCVideoTrack?
-    var remoteView: RTCEAGLVideoView = RTCEAGLVideoView()
-    var remoteVideoTrack: RTCVideoTrack?
-    var client: SPTJanusClient?
-    var clientListener: SPTJanusClient?
+//    var localView: RTCEAGLVideoView = RTCEAGLVideoView()
+//    var localVideoTrack: RTCVideoTrack?
+//    var remoteView: RTCEAGLVideoView = RTCEAGLVideoView()
+//    var remoteVideoTrack: RTCVideoTrack?
+//    var client: SPTJanusClient?
+//    var clientListener: SPTJanusClient?
     
     
     var castService: CastService?
@@ -35,10 +35,10 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
     init() {
         super.init(nibName: nil, bundle: nil)
         
-        client = SPTJanusClient.init(delegate: self)
-        clientListener = SPTJanusClient.init(delegate: self)
-        localView.delegate = self
-        remoteView.delegate = self
+//        client = SPTJanusClient.init(delegate: self)
+//        clientListener = SPTJanusClient.init(delegate: self)
+//        localView.delegate = self
+//        remoteView.delegate = self
         
     }
     
@@ -68,29 +68,29 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
     
     
     
-    func videoView(_ videoView: RTCEAGLVideoView!, didChangeVideoSize size: CGSize) {
-        
-    }
-    
-    func appClient(_ client: SPTJanusClient!, didChange state: SPTJanusClientState) {
-        print(state)
-    }
-    
-    func appClient(_ client: SPTJanusClient!, didReceiveLocalVideoTrack localVideoTrack: RTCVideoTrack!) {
-        self.localVideoTrack = localVideoTrack
-        self.localVideoTrack?.add(localView)
-    }
-    
-    func appClient(_ client: SPTJanusClient!, didReceiveRemoteVideoTrack remoteVideoTrack: RTCVideoTrack!) {
-        self.remoteVideoTrack = remoteVideoTrack
-        self.remoteVideoTrack?.add(remoteView)
-    }
-    
-    
-    
-    func appClient(_ client: SPTJanusClient!, didError error: Error!) {
-        print("error")
-    }
+//    func videoView(_ videoView: RTCEAGLVideoView!, didChangeVideoSize size: CGSize) {
+//
+//    }
+//
+//    func appClient(_ client: SPTJanusClient!, didChange state: SPTJanusClientState) {
+//        print(state)
+//    }
+//
+//    func appClient(_ client: SPTJanusClient!, didReceiveLocalVideoTrack localVideoTrack: RTCVideoTrack!) {
+//        self.localVideoTrack = localVideoTrack
+//        self.localVideoTrack?.add(localView)
+//    }
+//
+//    func appClient(_ client: SPTJanusClient!, didReceiveRemoteVideoTrack remoteVideoTrack: RTCVideoTrack!) {
+//        self.remoteVideoTrack = remoteVideoTrack
+//        self.remoteVideoTrack?.add(remoteView)
+//    }
+//
+//
+//
+//    func appClient(_ client: SPTJanusClient!, didError error: Error!) {
+//        print("error")
+//    }
     
     
     
@@ -103,7 +103,7 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
     
     func onApproved(){
         castService!.onApproved(handler: {data, ack in
-            self.client?.disconnect()
+//            self.client?.disconnect()
             self.dismiss(animated: true, completion: {
                 self.interviewModalDelegate?.returnInterviewModal()
             })
@@ -112,7 +112,7 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
     
     func onInterviewDeclined(){
         castService!.onInterviewDeclined(handler: {data, ack in
-            self.client?.disconnect()
+//            self.client?.disconnect()
             self.dismiss(animated: true, completion: {
                 self.interviewModalDelegate?.returnInterviewModal()
             })
@@ -121,10 +121,10 @@ class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoView
     
     func onInterviewAnswered(){
         castService!.onInterviewAnswered(handler: {data, ack in
-            self.client?.createWebRTCPeerConnection(asInitiator: true, userInfo: data as! [AnyHashable : Any])
+//            self.client?.createWebRTCPeerConnection(asInitiator: true, userInfo: data as! [AnyHashable : Any])
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(5000)) {
-                self.clientListener?.createWebRTCPeerConnection(asInitiator: false, userInfo: data as! [AnyHashable : Any])
+//                self.clientListener?.createWebRTCPeerConnection(asInitiator: false, userInfo: data as! [AnyHashable : Any])
             }
             
         })
@@ -175,31 +175,31 @@ extension InterviewModal {
     }
     
     func setWebRTC(){
-        contentView.addSubview(remoteView)
-        contentView.addSubview(localView)
-        
-        remoteView.translatesAutoresizingMaskIntoConstraints = false
-        localView.translatesAutoresizingMaskIntoConstraints = false
-        
-        remoteView.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -20).isActive = true
-        remoteView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        remoteView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        remoteView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        
-        remoteView.layer.cornerRadius = 100
-        remoteView.layer.masksToBounds = true
-        remoteView.backgroundColor = UIColor.red
-        
-        
-        localView.bottomAnchor.constraint(equalTo: remoteView.topAnchor, constant: -20).isActive = true
-        localView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        localView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        localView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        
-        localView.layer.cornerRadius = 50
-        localView.layer.masksToBounds = true
-        
-        localView.backgroundColor = UIColor.red
+//        contentView.addSubview(remoteView)
+//        contentView.addSubview(localView)
+//
+//        remoteView.translatesAutoresizingMaskIntoConstraints = false
+//        localView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        remoteView.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -20).isActive = true
+//        remoteView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+//        remoteView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+//        remoteView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+//
+//        remoteView.layer.cornerRadius = 100
+//        remoteView.layer.masksToBounds = true
+//        remoteView.backgroundColor = UIColor.red
+//
+//
+//        localView.bottomAnchor.constraint(equalTo: remoteView.topAnchor, constant: -20).isActive = true
+//        localView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//        localView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+//        localView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+//
+//        localView.layer.cornerRadius = 50
+//        localView.layer.masksToBounds = true
+//
+//        localView.backgroundColor = UIColor.red
         
         
         
@@ -214,7 +214,7 @@ extension InterviewModal {
         btnCancel.widthAnchor.constraint(equalToConstant: 150).isActive = true
         btnCancel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         btnCancel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        btnCancel.topAnchor.constraint(equalTo: remoteView.bottomAnchor, constant: 30).isActive = true
+//        btnCancel.topAnchor.constraint(equalTo: remoteView.bottomAnchor, constant: 30).isActive = true
         
         btnCancel.setTitle("Cancel", for: .normal)
         btnCancel.setTitleColor(.red, for: .normal)
@@ -260,7 +260,7 @@ extension InterviewModal {
     // MARK: -  Actions Buttons
 extension InterviewModal {
     @objc func closeModal(sender:UIButton!) {
-        self.client?.disconnect()
+//        self.client?.disconnect()
         castService!.declineInterview()
         dismiss(animated: true, completion: {
             self.interviewModalDelegate?.returnInterviewModal()
@@ -268,7 +268,7 @@ extension InterviewModal {
     }
     
     @objc func btnCancelModal(sender:UIButton!) {
-        self.client?.disconnect()
+//        self.client?.disconnect()
         castService!.declineInterview()
         dismiss(animated: true, completion: {
             self.interviewModalDelegate?.returnInterviewModal()

@@ -17,5 +17,6 @@ class Role: Decodable {
     var avatar: String?
     var first_name: String?
     var last_name: String?
+    var notes: String?
     
 }

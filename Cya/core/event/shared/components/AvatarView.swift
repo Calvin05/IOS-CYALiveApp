@@ -54,9 +54,20 @@ extension AvatarView {
         let avatarCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellAvatar, for: indexPath) as! AvatarCell
         
         if(self.avatarArray.count > indexPath.item){
-            avatarCell.avatar.downloadedFrom(defaultImage: "profile", link: self.avatarArray[indexPath.item].avatar!, contentMode: .scaleAspectFill)
-            avatarCell.name.text = "\(self.avatarArray[indexPath.item].first_name!) \(self.avatarArray[indexPath.item].last_name!)"
-            avatarCell.star.image = UIImage(named: "start")
+            
+            if let avatar = self.avatarArray[indexPath.item].avatar {
+                avatarCell.avatar.downloadedFrom(defaultImage: "profile", link: avatar, contentMode: .scaleAspectFill)
+            }else{
+                avatarCell.avatar.downloadedFrom(defaultImage: "profile", link: "", contentMode: .scaleAspectFill)
+            }
+            
+            if let firstName = self.avatarArray[indexPath.item].first_name {
+                avatarCell.firstName.text = firstName
+            }
+            
+            if let lastName = self.avatarArray[indexPath.item].last_name {
+                avatarCell.lastName.text = lastName
+            }
             
         }
         return avatarCell

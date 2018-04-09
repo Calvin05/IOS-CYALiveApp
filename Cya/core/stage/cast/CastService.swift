@@ -57,10 +57,20 @@ class CastService {
         let socket: Socket = Socket(socketUrlKey: "castUrl")
         self.socket = socket.socket
         socket.socketConnect(handler: {data, ack in
-            self.authenticate()
+//            self.authenticate()
+            self.joinRoom()
+            
             self.onAuth(handler: { (data, error) in
                 print("cast-auth")
             })
+            self.socket.on("sc:state:update") {data, ack in
+                //valida si es moderador quiza no va esto aqui
+                print(data)
+            }
+            self.onSessionJoin(handler: { (data, error) in
+                print("cast-auth")
+            })
+            
             self.onError(handler: { (data, error) in
                 print("cast-error")
             })
@@ -69,6 +79,10 @@ class CastService {
     
     
     // emit methods
+    func joinRoom(){
+        self.socket.emit("sc:room:join", ["roomId": self.sid])
+    }
+    
     func authenticate(){
         self.socket.emit(AUTHENTICATE, ["token": webToken])
     }
@@ -145,6 +159,14 @@ class CastService {
     
     
     //receive methods
+    func onCastStageToken(handler: @escaping (String?, String?) -> Void){
+        self.socket.on("sc:stage:token") {data, ack in
+            var dataProperties = data[0] as! [String: String]
+            let licodeToken = dataProperties["token"]!
+            handler(licodeToken, "Error")
+        }
+    }
+    
     func onError(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_ERROR) {data, ack in
             handler(data, "Error")
@@ -173,19 +195,25 @@ class CastService {
     
     func onRequested(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_REQUESTED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onApproved(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_APPROVED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onPushed(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_PUSHED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
@@ -217,31 +245,41 @@ class CastService {
             //                });
             //            }
             
-            handler(data[0], "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onSubscribed(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_SUBSCRIBED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onLeft(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_LEFT) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onDeclined(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_DECLINED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
     func onKicked(handler: @escaping (Any?, String?) -> Void){
         socket.on(CAST_KICKED) {data, ack in
-            handler(data, "Error")
+            if(self.validateUID(data: data[0])){
+                handler(data, "Error")
+            }
         }
     }
     
@@ -275,9 +313,15 @@ class CastService {
         }
     }
     
-    
-    
-    
+    func validateUID(data: Any)-> Bool{
+        var dataProperties = data as! [String: String]
+        let uid = dataProperties["uid"]
+        if(uid != nil && uid == UserDisplayObject.userId){
+            return true
+        }else{
+            return false
+        }
+    }
     
     
 }

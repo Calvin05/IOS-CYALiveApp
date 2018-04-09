@@ -21,7 +21,7 @@
 	<key>eventApiUrl</key>
 	<string>https://stg-eventapi.synaptop.com/api/v3/events</string>
 	<key>castUrl</key>
-	<string>https://stg-castapi.synaptop.com</string>
+	<string>https://stg-syncapi.synaptop.com</string>
 	<key>chatUrl</key>
 	<string>https://stg-chatapi.synaptop.com</string>
 </dict>

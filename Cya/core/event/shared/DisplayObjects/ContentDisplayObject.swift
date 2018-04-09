@@ -10,8 +10,8 @@ import Foundation
 
 class ContentDisplayObject: Decodable {
     
-    var id: Int?
-    var event_id: Int?
+    var id: String?
+    var event_id: String?
     var type: String?
     var data: String?
     

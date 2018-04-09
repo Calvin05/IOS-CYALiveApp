@@ -101,7 +101,8 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
         lastNameTextField.text = user.last_name
         emailTextField.text = user.email
         passwordTextField.text = user.password
-        dobTextField.text = user.dob
+        dobValue = user.dob!
+        dobTextField.text = NSString.convertFormatOfDate(date: user.dob!, originalFormat: "yyyy-MM-dd", destinationFormat: "MMMM, dd, yyyy")
         
         let buttonTemp = UIButton()
         if(user.gender == "F"){
@@ -175,58 +176,57 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
     
     @objc func saveGralInfo(){
         
-        let userGralInfo: User = User()
-
-        userGralInfo.dob = dobTextField.text == "" ? nil : dobTextField.text
-        userGralInfo.first_name = firstNameTextField.text == "" ? nil : firstNameTextField.text
-        userGralInfo.gender = gender
-        userGralInfo.last_name = lastNameTextField.text == "" ? nil : lastNameTextField.text
-        userGralInfo.notes = aboutMeTextField.text == "" ? nil : aboutMeTextField.text
-        userGralInfo.user_id = UserDisplayObject.userId
-        userGralInfo.email = emailTextField.text == "" ? nil : emailTextField.text
-        
-        if(uploadAvatar){
-            let uploadService: UploadService = UploadService()
-            let avatarData: AnyObject = uploadService.uploadAvatar(image: self.avatarImage.image!)
-
-            if let errorResponse = avatarData as? ErrorResponseDisplayObject{
-            }else{
-                userGralInfo.avatar = avatarData as! String
-            }
-        }
-
-        
-
-        let dataObject: AnyObject = userService.userUpdate(user: userGralInfo)
-
-        if let errorResponse = dataObject as? ErrorResponseDisplayObject{
-            setErrorMessage(errorResponse: errorResponse)
-        }else{
-            let user: UserIdNumber = dataObject as! UserIdNumber
+        do{
+            let userGralInfo: User = User()
             
+            userGralInfo.dob = dobValue
+            userGralInfo.first_name = firstNameTextField.text == "" ? nil : firstNameTextField.text
+            userGralInfo.gender = gender
+            userGralInfo.last_name = lastNameTextField.text == "" ? nil : lastNameTextField.text
+            userGralInfo.notes = aboutMeTextField.text == "" ? nil : aboutMeTextField.text
+            userGralInfo.user_id = UserDisplayObject.userId
+            userGralInfo.email = emailTextField.text == "" ? nil : emailTextField.text
+            
+            if(uploadAvatar){
+                let uploadService: UploadService = UploadService()
+                let avatarData: AnyObject = uploadService.uploadAvatar(image: self.avatarImage.image!)
+                
+                if let errorResponse = avatarData as? ErrorResponseDisplayObject{
+                }else{
+                    userGralInfo.avatar = avatarData as! String
+                }
+            }
+            
+            
+            let dataObject: AnyObject = try userService.userUpdate(user: userGralInfo)
+            
+            let user: UserIdNumber = dataObject as! UserIdNumber
+                
             if(user.user_id != nil){
                 UserDisplayObject.avatar = user.avatar!
                 UserDisplayObject.username = user.username!
             }
-
+            
             var mainView: UIStoryboard!
             mainView = UIStoryboard(name: "EventList", bundle: nil)
             let viewcontroller : UIViewController = mainView.instantiateViewController(withIdentifier: "EventList") as UIViewController
             self.show(viewcontroller, sender: nil)
+            
+        }catch{
+            showErrorMessage()
         }
         
     }
     
-    func setErrorMessage(errorResponse: ErrorResponseDisplayObject){
-        print(errorResponse)
+    func showErrorMessage(){
         errorLabel.isHidden = false
-
-        if (errorResponse.code != nil || errorResponse.statusCode != nil){
-            errorLabel.text = errorResponse.message
+        
+        if(ErrorHelper.error?.code == 500){
+            self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
         }else{
-            errorLabel.text = "\(errorResponse.errors![0].errors![0].description!): \(errorResponse.errors![0].errors![0].message!)"
+            errorLabel.text = ErrorHelper.error?.domain
         }
-
+        
     }
     
     @objc func donePickerPressed(){
@@ -240,36 +240,8 @@ class GralInfoController: UIViewController, UIImagePickerControllerDelegate,UINa
         let dayStr = String(format: "%02d", day)
         dobValue = "\(year)-\(monthStr)-\(dayStr)"
         
-        switch month {
-        case 1:
-            monthStr = "January"
-        case 2:
-            monthStr = "February"
-        case 3:
-            monthStr = "March"
-        case 4:
-            monthStr = "April"
-        case 5:
-            monthStr = "May"
-        case 6:
-            monthStr = "June"
-        case 7:
-            monthStr = "July"
-        case 8:
-            monthStr = "August"
-        case 9:
-            monthStr = "September"
-        case 10:
-            monthStr = "October"
-        case 11:
-            monthStr = "November"
-        case 12:
-            monthStr = "December"
-        default:
-            break
-        }
+        dobTextField.text = NSString.convertFormatOfDate(date: dobValue, originalFormat: "yyyy-MM-dd", destinationFormat: "MMMM, dd, yyyy")
         
-        dobTextField.text = "\(monthStr), \(dayStr), \(year)"
         self.view.endEditing(true)
     }
     
@@ -298,11 +270,12 @@ extension GralInfoController{
         setGender()
         setDOB()
         
-        setErrorMessage()
+        
 //        setFooter()
         
         setBottomBar()
         setDoneButton()
+        setErrorMessage()
         
         
        
@@ -336,7 +309,7 @@ extension GralInfoController{
         headerView.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 0).isActive = true
         headerView.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: 0).isActive = true
         headerView.topAnchor.constraint(equalTo: viewContent.topAnchor, constant: 20).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         headerView.backgroundColor = UIColor.cyaMagenta
         
@@ -682,7 +655,7 @@ extension GralInfoController{
         
         errorLabel.leftAnchor.constraint(equalTo: viewContent.leftAnchor, constant: 10).isActive = true
         errorLabel.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -10).isActive = true
-        errorLabel.topAnchor.constraint(equalTo: maleButton.bottomAnchor, constant: 5).isActive = true
+        errorLabel.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -10).isActive = true
         
         errorLabel.isHidden = true
         errorLabel.textColor = UIColor.cyaMagenta

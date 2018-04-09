@@ -7,6 +7,7 @@
 //
 protocol ModalExpiredDelegate: class {
     func returnModalExpired(expired: Bool)
+    func aceptPuplish()
 }
 
 import UIKit
@@ -56,7 +57,8 @@ class JoinStageModal: UIViewController {
         textJoin.text = "Expires in \(self.seconds!) seconds"
         if(seconds! <= 0){
             timer.invalidate()
-            castService!.declineStage()
+//            castService!.declineStage()
+            castService!.leaveStage()
             dismiss(animated: true, completion: {
                 self.modalExpiredDelegate?.returnModalExpired(expired: true)
                 self.invalidateTimer()
@@ -214,12 +216,14 @@ extension JoinStageModal {
     @objc func btnAccept(sender:UIButton!) {
         castService!.acceptStage()
         self.invalidateTimer()
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: {
+            self.modalExpiredDelegate?.aceptPuplish()
+        })
         
     }
     
     @objc func btnCancelModal(sender:UIButton!) {
-        castService!.declineStage()
+        castService!.leaveStage()
         self.invalidateTimer()
         dismiss(animated: true, completion: nil)
     }

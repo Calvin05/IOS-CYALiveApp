@@ -10,9 +10,15 @@ import UIKit
 import WebKit
 import AVKit
 import youtube_ios_player_helper
-
+import WebRTC
 
 class StageViewController: UIViewController, YTPlayerViewDelegate{
+    
+    var remoteRoom: ECRoom = ECRoom()
+    var localStream: ECStream = ECStream()
+    var playerViews = [AnyHashable]()
+    var playerWidth: CGFloat = 0.0
+    var playerHeight: CGFloat = 0.0
     
     var viewContent: UIView = UIView()
     var backButtonView: BackButtonView?
@@ -30,7 +36,8 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
     let viewNotification:UIView = UIView ();
     
     @IBOutlet var mainView: UIView!
-    var wvStages: UIWebView = UIWebView()
+//    var wvStages: UIWebView = UIWebView()
+    var wvStages: UIView = UIView()
     var vStageYoutubeTransp: UIView = UIView()
     var vStageYouTube: YTPlayerView = YTPlayerView()
     var vStageLive: UIView = UIView()
@@ -79,11 +86,13 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
     var halfScreenWidth: CGFloat = 0.0
     var activeTransType = "movie"
     
+    
     var eventId: String?
     
     
     init(sigService: SigService, eventId: String) {
         super.init(nibName: nil, bundle: nil)
+        
         view.backgroundColor = UIColor.cyaDarkBg
         
         self.eventId = eventId
@@ -96,13 +105,17 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         self.screenWidth = self.view.frame.size.width
         self.halfScreenWidth = self.screenWidth / 2
         
+        self.playerWidth = halfScreenWidth - 10
+        self.playerHeight = halfScreenWidth - 20
+        
+        
         self.setViewContent()
         self.setStagePelicula()
         self.setStageImagen()
         self.setStageYoutube()
         self.setStageLive()
         self.setwvStages()
-        self.loadUrlWvStages()
+        
         self.loadPopUpInterview()
         self.setLayoutBottomBar()
         self.setEventDescription()
@@ -136,6 +149,7 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         
     }
     
+    
     func setSockets(){
         self.chatServicesStage = ChatService(sessionId: (self.chatEventService?.session_id)!)
         DispatchQueue.main.async {
@@ -149,11 +163,32 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         
         self.castService = CastService(sid: (self.castEventService?.session_id)!, eventId: self.eventId!, webToken: (self.eventContentDisplayObject?.token)!)
         
+        onCastStageToken()
+        onUnpulish()
+        
         self.setPopUpInterviewServices()
         
         self.statusStageView?.setCastService(castService: self.castService!)
         
         self.socketLoaded = true
+    }
+    
+    func onCastStageToken(){
+        self.castService?.onCastStageToken(handler: {data, ack in
+            self.remoteRoom = ECRoom(encodedToken: data, delegate: self, andPeerFactory: RTCPeerConnectionFactory())
+        })
+    }
+    
+    func onUnpulish(){
+        self.castService?.onLeft(handler: {data, ack in
+            self.unpublish()
+        })
+        self.castService?.onKicked(handler: {data, ack in
+            self.unpublish()
+        })
+        self.castService?.onDeclined(handler: {data, ack in
+            self.unpublish()
+        })
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -194,6 +229,7 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
+        self.leaveRoom()
         if(self.playerMovie != nil){
             playerMovie?.pause()
         }
@@ -493,30 +529,15 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         vStageLive.heightAnchor.constraint(equalToConstant: CGFloat(height16_9)).isActive = true
     }
     
-    func loadUrlWvStages(){
-        let eventHelper: EventHelper = EventHelper()
-        
-        eventHelper.getUrlMainStage(eventId: eventId!, userId: UserDisplayObject.userId){data, err in
-            DispatchQueue.main.async {
-                if(err != nil){
-                    self.present(ErrorHelper.showAlert(), animated: true, completion: nil)
-                }else{
-                    self.wvStages.loadRequest(URLRequest(url: data!))
-                }
-                    
-                
-            }
-        }
-    }
-    
     func setwvStages(){
         view.addSubview(wvStages)
         wvStages.translatesAutoresizingMaskIntoConstraints = false
         wvStages.topAnchor.constraint(equalTo: vStageMovie.bottomAnchor, constant: 0).isActive = true
         wvStages.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
-        let height16_9 = aspectRatioSM.getHeightFromWidth(elementWidth: Float(screenWidth))
-        wvStages.heightAnchor.constraint(equalToConstant: CGFloat(height16_9)).isActive = true
+        wvStages.heightAnchor.constraint(equalToConstant: playerHeight * 2 + 6).isActive = true
         wvStages.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0).isActive = true
+        
+        wvStages.backgroundColor = UIColor.white
     }
     
     
@@ -723,7 +744,13 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         }
         
         if(movie["time"] != nil){
-            playerMovie?.seek(to: CMTimeMakeWithSeconds(movie["time"] as! Double, (playerMovie?.currentItem?.asset.duration.timescale)!))
+            let time = movie["time"]!
+            if time is NSNumber {
+                playerMovie?.seek(to: CMTimeMakeWithSeconds(movie["time"] as! Double, (playerMovie?.currentItem?.asset.duration.timescale)!))
+            }else {
+                playerMovie?.seek(to: CMTimeMakeWithSeconds(0.0, (playerMovie?.currentItem?.asset.duration.timescale)!))
+            }
+            
         }
         
         if(movie["isPlaying"] as! Int == 0){
@@ -749,6 +776,25 @@ extension StageViewController: ModalExpiredDelegate {
         let expiredStageModal = ExpiredStageModal()
         expiredStageModal.modalPresentationStyle = .overCurrentContext
         self.present(expiredStageModal, animated: true, completion: nil)
+    }
+    
+    func aceptPuplish() {
+        self.initializeLocalStream()
+        
+        let attributes = ["name": "kDefaultUserName", "actualName": "kDefaultUserName", "type": "public"]
+        
+        self.localStream.setAttributes(attributes)
+        self.remoteRoom.subscribe(self.localStream)
+        
+        // We get connected and ready to publish, so publish.
+        self.remoteRoom.publish(self.localStream)
+        
+        self.statusStageView?.status = "published"
+        self.statusStageView?.setStatusStagePublished()
+        
+        watchStream(stream: self.localStream)
+        
+        
     }
 }
 
@@ -792,6 +838,154 @@ extension StageViewController: InterviewModalDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)        
+    }
+}
+
+
+extension StageViewController: ECRoomDelegate, RTCEAGLVideoViewDelegate {
+    
+    //ECRoomDelegate
+    func room(_ room: ECRoom!, didConnect roomMetadata: [AnyHashable : Any]!) {
+        
+        for stream: Any in remoteRoom.remoteStreams {
+            remoteRoom.subscribe(stream as! ECStream)
+        }
+    }
+    
+    func room(_ room: ECRoom!, didError status: ECRoomErrorStatus, reason: String!) {
+        print("didError")
+    }
+    
+    
+    func room(_ room: ECRoom!, didSubscribeStream stream: ECStream!) {
+        print("didSubscribeStream")
+        self.watchStream(stream: stream)
+    }
+    
+    func room(_ room: ECRoom!, didUnSubscribeStream stream: ECStream!) {
+        print("didUnSubscribeStream")
+        self.removeStream(streamId: self.localStream.streamId!)
+//        self.localStream = ECStream()
+    }
+    
+    func room(_ room: ECRoom!, didPublishStream stream: ECStream!) {
+        print("didPublishStream")
+    }
+    
+    func room(_ room: ECRoom!, didUnpublishStream stream: ECStream!) {
+        print("didUnpublishStream")
+//        self.removeStream(streamId: stream.streamId!)
+        self.localStream = ECStream()
+    }
+    
+    func room(_ room: ECRoom!, didStartRecording stream: ECStream!, withRecordingId recordingId: String!, recording recordingDate: Date!) {
+        print("didStartRecording")
+    }
+    
+    func room(_ room: ECRoom!, didFailStartRecording stream: ECStream!, withErrorMsg errorMsg: String!) {
+        print("didFailStartRecording")
+    }
+    
+    func room(_ room: ECRoom!, didChange status: ECRoomStatus) {
+        print("didChange")
+    }
+    
+    func room(_ room: ECRoom!, didAddedStream stream: ECStream!) {
+        print("didAddedStream")
+        remoteRoom.subscribe(stream)
+    }
+    
+    func room(_ room: ECRoom!, didRemovedStream stream: ECStream!) {
+        print("didRemovedStream")
+        self.removeStream(streamId: stream.streamId!)
+    }
+    
+    func room(_ room: ECRoom!, didReceiveData data: [AnyHashable : Any]!, from stream: ECStream!) {
+        print("didReceiveData")
+    }
+    
+    func room(_ room: ECRoom!, didUpdateAttributesOf stream: ECStream!) {
+        print("didUpdateAttributesOf")
+    }
+    //ECRoomDelegate-end
+    
+    //RTCEAGLVideoViewDelegate
+    func videoView(_ videoView: RTCEAGLVideoView, didChangeVideoSize size: CGSize) {
+        print("")
+    }
+    //RTCEAGLVideoViewDelegate-end
+    
+    
+    func watchStream(stream: ECStream){
+        let frame = CGRect(x: 0, y: 0, width: self.playerWidth, height: self.playerHeight)
+        let playerView: ECPlayerView  = ECPlayerView(live: stream, frame: frame)
+        playerView.videoView.delegate = self
+        
+        playerViews.append(playerView)
+        wvStages.addSubview(playerView)
+    }
+    
+    func removeStream(streamId: String){
+        for index in 0..<playerViews.count {
+            let playerView: ECPlayerView = playerViews[index] as! ECPlayerView
+            if (playerView.stream.streamId == streamId) {
+                playerViews.remove(at: index)
+                playerView.removeFromSuperview()
+                break
+            }
+        }
+    }
+    
+    func unpublish(){
+        if(localStream.streamId != nil){
+            remoteRoom.unsubscribe(localStream)
+            remoteRoom.unpublish()
+            
+        }
+    }
+    
+    func leaveRoom(){
+//        unpublish()
+        for playerView in playerViews{
+            let player: ECPlayerView = playerView as! ECPlayerView
+            self.removeStream(streamId: player.stream.streamId!)
+        }
+        
+        remoteRoom.leave()
+        remoteRoom = ECRoom()
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        for i in 0..<playerViews.count {
+            layoutPlayerView(playerViews[i] as! ECPlayerView, index: i)
+        }
+    }
+    
+    func layoutPlayerView(_ playerView: ECPlayerView?, index: Int) {
+        
+        var frame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+        let vOffset: CGFloat = 2.0
+        let margin: CGFloat = 6.0
+        switch index {
+        case 0:
+            frame = CGRect(x: margin, y: vOffset, width: playerWidth, height: playerHeight)
+        case 1:
+            frame = CGRect(x: playerWidth + margin + 5, y: vOffset, width: playerWidth, height: playerHeight)
+        case 2:
+            frame = CGRect(x: margin, y: vOffset + 2 + playerHeight, width: playerWidth, height: playerHeight)
+        case 3:
+            frame = CGRect(x: playerWidth + margin + 5, y: vOffset + 2 + playerHeight, width: playerWidth, height: playerHeight)
+        default:
+            print("")
+        }
+        playerView?.frame = frame
+    }
+    
+    
+    func initializeLocalStream() {
+        // Initialize a stream and access local stream
+        localStream = ECStream(localStreamWithOptions: nil, attributes: ["name": "localStream"])
     }
 }
 

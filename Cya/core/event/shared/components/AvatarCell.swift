@@ -13,7 +13,8 @@ class AvatarCell: UICollectionViewCell{
     
     var avatarContent : UIView = UIView()
     var avatar: UIImageView = UIImageView()
-    var name: EdgeInsetLabel = EdgeInsetLabel()
+    var firstName: EdgeInsetLabel = EdgeInsetLabel()
+    var lastName: EdgeInsetLabel = EdgeInsetLabel()
     var star:  UIImageView = UIImageView()
     var gradientLayer: CAGradientLayer = CAGradientLayer()
     
@@ -30,7 +31,8 @@ class AvatarCell: UICollectionViewCell{
         
         contentView.addSubview(avatarContent)
         avatarContent.addSubview(avatar)
-        avatarContent.addSubview(name)
+        avatarContent.addSubview(firstName)
+        avatarContent.addSubview(lastName)
         
         avatarContent.translatesAutoresizingMaskIntoConstraints = false
         avatarContent.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1).isActive = true
@@ -43,8 +45,8 @@ class AvatarCell: UICollectionViewCell{
         let wAvatar = self.frame.width-2
         
         avatar.topAnchor.constraint(equalTo: avatarContent.topAnchor, constant: 1).isActive = true
-        avatar.heightAnchor.constraint(equalToConstant: wAvatar).isActive = true
-        avatar.widthAnchor.constraint(equalToConstant: wAvatar).isActive = true
+        avatar.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        avatar.widthAnchor.constraint(equalToConstant: 56).isActive = true
         avatar.centerXAnchor.constraint(equalTo: avatarContent.centerXAnchor).isActive = true
         avatar.translatesAutoresizingMaskIntoConstraints = false
         
@@ -53,28 +55,40 @@ class AvatarCell: UICollectionViewCell{
         avatar.contentMode = .scaleAspectFill
         //        avatar.layer.cornerRadius = wAvatar/2
         avatar.layer.borderWidth = 0
+        avatar.layer.cornerRadius = 28
         avatar.layer.masksToBounds = true
         
-        self.addSubview(star)
+//        self.addSubview(star)
+//
+//        star.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 10).isActive = true
+//        star.widthAnchor.constraint(equalToConstant: 10).isActive = true
+//        star.heightAnchor.constraint(equalToConstant: 10).isActive = true
+//        star.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
+//        star.translatesAutoresizingMaskIntoConstraints = false
         
-        star.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 10).isActive = true
-        star.widthAnchor.constraint(equalToConstant: 10).isActive = true
-        star.heightAnchor.constraint(equalToConstant: 10).isActive = true
-        star.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
-        star.translatesAutoresizingMaskIntoConstraints = false
+        firstName.translatesAutoresizingMaskIntoConstraints = false
+        firstName.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 12).isActive = true
+        firstName.centerXAnchor.constraint(equalTo: avatarContent.centerXAnchor, constant: 0).isActive = true
         
-        name.translatesAutoresizingMaskIntoConstraints = false
-        name.topAnchor.constraint(equalTo: star.bottomAnchor, constant: 12).isActive = true
-        name.leftAnchor.constraint(equalTo: avatarContent.leftAnchor, constant: 0).isActive = true
-        name.rightAnchor.constraint(equalTo: avatarContent.rightAnchor, constant: 0).isActive = true
+        firstName.text = ""
+        firstName.font = FontCya.CyaTextNameAvatar
+        firstName.textColor = .darkGray
+        firstName.numberOfLines = 0
+        firstName.textAlignment = .center
+        firstName.lineBreakMode = .byWordWrapping
+        firstName.sizeToFit()
         
-        name.text = ""
-        name.font = FontCya.CyaTextNameAvatar
-        name.textColor = .darkGray
-        name.numberOfLines = 0
-        name.textAlignment = .center
-        name.lineBreakMode = .byWordWrapping
-        name.sizeToFit()
+        lastName.translatesAutoresizingMaskIntoConstraints = false
+        lastName.topAnchor.constraint(equalTo: firstName.bottomAnchor, constant: 2).isActive = true
+        lastName.centerXAnchor.constraint(equalTo: avatarContent.centerXAnchor, constant: 0).isActive = true
+        
+        lastName.text = ""
+        lastName.font = FontCya.CyaTextNameAvatar
+        lastName.textColor = .darkGray
+        lastName.numberOfLines = 0
+        lastName.textAlignment = .center
+        lastName.lineBreakMode = .byWordWrapping
+        lastName.sizeToFit()
     }
 }
 

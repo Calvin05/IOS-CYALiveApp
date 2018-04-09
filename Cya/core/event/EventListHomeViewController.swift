@@ -56,7 +56,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
 //        scrollTable(animatedScroll: false)
-        profileButton.setImage(avatarImage.image, for: .normal)
+//        profileButton.setImage(avatarImage.image, for: .normal)
     }
     
     override func didReceiveMemoryWarning() {
@@ -80,7 +80,7 @@ class EventListHomeViewController:UIViewController, UITableViewDataSource, UITab
         toolBarMenuBackground.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         toolBarMenuBackground.topAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
         
-        toolBarMenuBackground.backgroundColor = UIColor.darkGray
+        toolBarMenuBackground.backgroundColor = UIColor.white
     }
     
    
@@ -238,7 +238,9 @@ extension EventListHomeViewController {
         cell.titleEvent.text = event.title
         
         if (event.start_at != nil ){
-            cell.TimeEvent.text = NSString.convertFormatOfDate(date: event.start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "EEEE, dd MMMM ,yyyy")
+//            cell.TimeEvent.text = NSString.convertFormatOfDate(date: event.start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "EEEE, dd MMMM ,yyyy")
+            cell.monthEvent.text = NSString.convertFormatOfDate(date: event.start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "MMM")
+            cell.dayEvent.text = NSString.convertFormatOfDate(date: event.start_at!, originalFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", destinationFormat: "dd")
         }
         
 //        cell.imageAvatar.downloadedFrom(defaultImage: "thumb-logo", link: event.thumbnail!)
@@ -258,9 +260,9 @@ extension EventListHomeViewController {
         }
         
         if(event.roles?.count == 0){
-            return 320
+            return 280
         }else{
-            return 420
+            return 410
         }
         
     }
@@ -406,6 +408,7 @@ extension EventListHomeViewController {
         headerContainer.addSubview(liveButton)
         headerContainer.addSubview(upComingButton)
         headerContainer.addSubview(pastButton)
+        headerContainer.addSubview(avatarImage)
         headerContainer.addSubview(profileButton)
         
         
@@ -413,6 +416,7 @@ extension EventListHomeViewController {
         liveButton.translatesAutoresizingMaskIntoConstraints = false
         upComingButton.translatesAutoresizingMaskIntoConstraints = false
         pastButton.translatesAutoresizingMaskIntoConstraints = false
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
         profileButton.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -463,14 +467,25 @@ extension EventListHomeViewController {
         pastButton.setTitle("Past", for: .normal)
         
         
+        avatarImage.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
+        avatarImage.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        avatarImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        avatarImage.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -20).isActive = true
+        
+        avatarImage.sd_setImage(with: URL(string: UserDisplayObject.avatar), placeholderImage: UIImage(named: "cya-profile-gray-s"))
+        
+        avatarImage.contentMode = .scaleAspectFit
+        avatarImage.layer.cornerRadius = 15
+        avatarImage.layer.masksToBounds = true
+        
+        
         profileButton.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
         profileButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         profileButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         profileButton.rightAnchor.constraint(equalTo: viewContent.rightAnchor, constant: -20).isActive = true
         
-        avatarImage.sd_setImage(with: URL(string: UserDisplayObject.avatar), placeholderImage: UIImage(named: "cya-profile-gray-s"))
         
-        profileButton.imageView?.contentMode = .scaleAspectFit
+//        profileButton.imageView?.contentMode = .scaleAspectFit
         profileButton.layer.cornerRadius = 15
         profileButton.layer.masksToBounds = true
         profileButton.addTarget(self, action: #selector(profile), for: .touchUpInside)

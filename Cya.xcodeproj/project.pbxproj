@@ -97,16 +97,6 @@
 		E93579B31F8FFDA600901F59 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93579B21F8FFDA600901F59 /* UserService.swift */; };
 		E93579B51F90005700901F59 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93579B41F90005700901F59 /* User.swift */; };
 		E9358D851FE2E7CE00703F69 /* UploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9358D841FE2E7CE00703F69 /* UploadService.swift */; };
-		E93614F31FFD9BF70088BEC2 /* RTCICEServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614F11FFD88510088BEC2 /* RTCICEServer+JSON.m */; };
-		E93614F41FFD9C070088BEC2 /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614E31FFD884F0088BEC2 /* RTCSessionDescription+JSON.m */; };
-		E93614F51FFD9C0F0088BEC2 /* SPTJanusClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614EE1FFD88510088BEC2 /* SPTJanusClient.m */; };
-		E93614F61FFD9C150088BEC2 /* SPTJanusPluginHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614E71FFD88500088BEC2 /* SPTJanusPluginHandle.m */; };
-		E93614F71FFD9C1B0088BEC2 /* SPTJanusSession.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614EA1FFD88500088BEC2 /* SPTJanusSession.m */; };
-		E93614F81FFD9C210088BEC2 /* SPTJanusStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614E41FFD884F0088BEC2 /* SPTJanusStream.m */; };
-		E93614F91FFD9C270088BEC2 /* SPTMessageResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614E81FFD88500088BEC2 /* SPTMessageResponse.m */; };
-		E93614FA1FFD9C2C0088BEC2 /* SPTSignalingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614E61FFD88500088BEC2 /* SPTSignalingMessage.m */; };
-		E93614FB1FFD9C330088BEC2 /* SPTUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614EB1FFD88500088BEC2 /* SPTUtilities.m */; };
-		E93614FE1FFD9DC20088BEC2 /* RTCICECandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E93614FD1FFD9DC10088BEC2 /* RTCICECandidate+JSON.m */; };
 		E9363CE11F7C44360079494B /* AppConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9363CE01F7C44360079494B /* AppConfig.plist */; };
 		E9363CE31F7C49B30079494B /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9363CE21F7C49B30079494B /* ChatService.swift */; };
 		E93713042044BCB400F92140 /* PaddingUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93713032044BCB400F92140 /* PaddingUITextField.swift */; };
@@ -134,6 +124,22 @@
 		E95C0BE71FDEECC6004E979C /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95C0BE61FDEECC6004E979C /* SettingsController.swift */; };
 		E95C0BEA1FDF2393004E979C /* FooterSettingsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95C0BE91FDF2393004E979C /* FooterSettingsComponent.swift */; };
 		E95C80C41FA798AC00378CD7 /* CastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95C80C31FA798AC00378CD7 /* CastService.swift */; };
+		E989E68D20729D41005EFF6E /* LicodeErizoClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E989E68E20729D41005EFF6E /* LicodeErizoClient.framework */; };
+		E989E6B120729E51005EFF6E /* ECPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E69120729E50005EFF6E /* ECPlayerView.m */; };
+		E989E6B220729E51005EFF6E /* ECRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E69320729E50005EFF6E /* ECRoom.m */; };
+		E989E6B320729E51005EFF6E /* ECStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E69620729E50005EFF6E /* ECStream.m */; };
+		E989E6B420729E51005EFF6E /* ErizoClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E69820729E50005EFF6E /* ErizoClient.m */; };
+		E989E6B520729E51005EFF6E /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E989E69920729E50005EFF6E /* LICENSE */; };
+		E989E6B620729E51005EFF6E /* ECClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E69D20729E50005EFF6E /* ECClient.m */; };
+		E989E6B720729E51005EFF6E /* ECSignalingChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6A220729E50005EFF6E /* ECSignalingChannel.m */; };
+		E989E6B820729E51005EFF6E /* ECSignalingEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6A420729E50005EFF6E /* ECSignalingEvent.m */; };
+		E989E6B920729E51005EFF6E /* ECSignalingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6A620729E50005EFF6E /* ECSignalingMessage.m */; };
+		E989E6BA20729E51005EFF6E /* RTCICECandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6A820729E50005EFF6E /* RTCICECandidate+JSON.m */; };
+		E989E6BB20729E51005EFF6E /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6AA20729E50005EFF6E /* RTCIceServer+JSON.m */; };
+		E989E6BC20729E51005EFF6E /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6AC20729E50005EFF6E /* RTCSessionDescription+JSON.m */; };
+		E989E6BD20729E51005EFF6E /* SDPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6AE20729E50005EFF6E /* SDPUtils.m */; };
+		E989E6BE20729E51005EFF6E /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6B020729E50005EFF6E /* Utilities.m */; };
+		E989E6C320729E5E005EFF6E /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = E989E6C220729E5E005EFF6E /* Logger.m */; };
 		E98CE3081FBBA3E200A3CD76 /* EventListDisplayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98CE3071FBBA3E200A3CD76 /* EventListDisplayObject.swift */; };
 		E9A7511A1FDF388200CF2BA0 /* MoreInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A751191FDF388200CF2BA0 /* MoreInfoController.swift */; };
 		E9B9AB461F7C0D6000033402 /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B9AB451F7C0D6000033402 /* EventService.swift */; };
@@ -240,26 +246,6 @@
 		E93579B41F90005700901F59 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E9358D841FE2E7CE00703F69 /* UploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadService.swift; sourceTree = "<group>"; };
 		E93614E01FFD884E0088BEC2 /* Cya-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cya-Bridging-Header.h"; sourceTree = "<group>"; };
-		E93614E11FFD884F0088BEC2 /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
-		E93614E21FFD884F0088BEC2 /* RTCICEServer+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCICEServer+JSON.h"; sourceTree = "<group>"; };
-		E93614E31FFD884F0088BEC2 /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
-		E93614E41FFD884F0088BEC2 /* SPTJanusStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTJanusStream.m; sourceTree = "<group>"; };
-		E93614E51FFD884F0088BEC2 /* SPTMessageResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTMessageResponse.h; sourceTree = "<group>"; };
-		E93614E61FFD88500088BEC2 /* SPTSignalingMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTSignalingMessage.m; sourceTree = "<group>"; };
-		E93614E71FFD88500088BEC2 /* SPTJanusPluginHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTJanusPluginHandle.m; sourceTree = "<group>"; };
-		E93614E81FFD88500088BEC2 /* SPTMessageResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTMessageResponse.m; sourceTree = "<group>"; };
-		E93614E91FFD88500088BEC2 /* SPTJanusSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTJanusSession.h; sourceTree = "<group>"; };
-		E93614EA1FFD88500088BEC2 /* SPTJanusSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTJanusSession.m; sourceTree = "<group>"; };
-		E93614EB1FFD88500088BEC2 /* SPTUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTUtilities.m; sourceTree = "<group>"; };
-		E93614EC1FFD88500088BEC2 /* SPTJanusPluginHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTJanusPluginHandle.h; sourceTree = "<group>"; };
-		E93614ED1FFD88500088BEC2 /* SPTSignalingMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTSignalingMessage.h; sourceTree = "<group>"; };
-		E93614EE1FFD88510088BEC2 /* SPTJanusClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTJanusClient.m; sourceTree = "<group>"; };
-		E93614EF1FFD88510088BEC2 /* SPTUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTUtilities.h; sourceTree = "<group>"; };
-		E93614F01FFD88510088BEC2 /* SPTJanusStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTJanusStream.h; sourceTree = "<group>"; };
-		E93614F11FFD88510088BEC2 /* RTCICEServer+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCICEServer+JSON.m"; sourceTree = "<group>"; };
-		E93614F21FFD88510088BEC2 /* SPTJanusClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTJanusClient.h; sourceTree = "<group>"; };
-		E93614FC1FFD9DC10088BEC2 /* RTCICECandidate+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCICECandidate+JSON.h"; sourceTree = "<group>"; };
-		E93614FD1FFD9DC10088BEC2 /* RTCICECandidate+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCICECandidate+JSON.m"; sourceTree = "<group>"; };
 		E9363CE01F7C44360079494B /* AppConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppConfig.plist; sourceTree = "<group>"; };
 		E9363CE21F7C49B30079494B /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		E93713032044BCB400F92140 /* PaddingUITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingUITextField.swift; sourceTree = "<group>"; };
@@ -288,6 +274,43 @@
 		E95C0BE61FDEECC6004E979C /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		E95C0BE91FDF2393004E979C /* FooterSettingsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterSettingsComponent.swift; sourceTree = "<group>"; };
 		E95C80C31FA798AC00378CD7 /* CastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastService.swift; sourceTree = "<group>"; };
+		E989E6892072926D005EFF6E /* libErizoClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libErizoClient.a; path = "../../Library/Developer/Xcode/DerivedData/Cya-cyqihsvcoaqslmadeajypcyyqxcj/Build/Products/Debug-iphonesimulator/libErizoClient.a"; sourceTree = "<group>"; };
+		E989E68C20729276005EFF6E /* LicodeErizoClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LicodeErizoClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E989E68E20729D41005EFF6E /* LicodeErizoClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LicodeErizoClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E989E69020729E50005EFF6E /* ECPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECPlayerView.h; sourceTree = "<group>"; };
+		E989E69120729E50005EFF6E /* ECPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECPlayerView.m; sourceTree = "<group>"; };
+		E989E69220729E50005EFF6E /* ECRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECRoom.h; sourceTree = "<group>"; };
+		E989E69320729E50005EFF6E /* ECRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECRoom.m; sourceTree = "<group>"; };
+		E989E69420729E50005EFF6E /* ECRoomStatsProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECRoomStatsProtocol.h; sourceTree = "<group>"; };
+		E989E69520729E50005EFF6E /* ECStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECStream.h; sourceTree = "<group>"; };
+		E989E69620729E50005EFF6E /* ECStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECStream.m; sourceTree = "<group>"; };
+		E989E69720729E50005EFF6E /* ErizoClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErizoClient.h; sourceTree = "<group>"; };
+		E989E69820729E50005EFF6E /* ErizoClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErizoClient.m; sourceTree = "<group>"; };
+		E989E69920729E50005EFF6E /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		E989E69B20729E50005EFF6E /* ECClient+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ECClient+Internal.h"; sourceTree = "<group>"; };
+		E989E69C20729E50005EFF6E /* ECClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECClient.h; sourceTree = "<group>"; };
+		E989E69D20729E50005EFF6E /* ECClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECClient.m; sourceTree = "<group>"; };
+		E989E69E20729E50005EFF6E /* ECClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECClientDelegate.h; sourceTree = "<group>"; };
+		E989E69F20729E50005EFF6E /* ECClientState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECClientState.h; sourceTree = "<group>"; };
+		E989E6A020729E50005EFF6E /* ECLicodeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECLicodeProtocol.h; sourceTree = "<group>"; };
+		E989E6A120729E50005EFF6E /* ECSignalingChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSignalingChannel.h; sourceTree = "<group>"; };
+		E989E6A220729E50005EFF6E /* ECSignalingChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSignalingChannel.m; sourceTree = "<group>"; };
+		E989E6A320729E50005EFF6E /* ECSignalingEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSignalingEvent.h; sourceTree = "<group>"; };
+		E989E6A420729E50005EFF6E /* ECSignalingEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSignalingEvent.m; sourceTree = "<group>"; };
+		E989E6A520729E50005EFF6E /* ECSignalingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSignalingMessage.h; sourceTree = "<group>"; };
+		E989E6A620729E50005EFF6E /* ECSignalingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSignalingMessage.m; sourceTree = "<group>"; };
+		E989E6A720729E50005EFF6E /* RTCIceCandidate+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCIceCandidate+JSON.h"; sourceTree = "<group>"; };
+		E989E6A820729E50005EFF6E /* RTCICECandidate+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCICECandidate+JSON.m"; sourceTree = "<group>"; };
+		E989E6A920729E50005EFF6E /* RTCIceServer+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCIceServer+JSON.h"; sourceTree = "<group>"; };
+		E989E6AA20729E50005EFF6E /* RTCIceServer+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCIceServer+JSON.m"; sourceTree = "<group>"; };
+		E989E6AB20729E50005EFF6E /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
+		E989E6AC20729E50005EFF6E /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
+		E989E6AD20729E50005EFF6E /* SDPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPUtils.h; sourceTree = "<group>"; };
+		E989E6AE20729E50005EFF6E /* SDPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDPUtils.m; sourceTree = "<group>"; };
+		E989E6AF20729E50005EFF6E /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		E989E6B020729E50005EFF6E /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		E989E6C120729E5E005EFF6E /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		E989E6C220729E5E005EFF6E /* Logger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
 		E98CE3071FBBA3E200A3CD76 /* EventListDisplayObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListDisplayObject.swift; sourceTree = "<group>"; };
 		E9A751191FDF388200CF2BA0 /* MoreInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoController.swift; sourceTree = "<group>"; };
 		E9B9AB451F7C0D6000033402 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
@@ -302,6 +325,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E989E68D20729D41005EFF6E /* LicodeErizoClient.framework in Frameworks */,
 				1BA6C5972000220200115FC4 /* AVFoundation.framework in Frameworks */,
 				1B799D6A1FE0C42100D716AB /* Stripe.framework in Frameworks */,
 				E93927BE1F8D7C8400D4CB32 /* youtube_ios_player_helper.framework in Frameworks */,
@@ -454,6 +478,9 @@
 		479B6ED4C3EEC4BF8A52CD5A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E989E68E20729D41005EFF6E /* LicodeErizoClient.framework */,
+				E989E68C20729276005EFF6E /* LicodeErizoClient.framework */,
+				E989E6892072926D005EFF6E /* libErizoClient.a */,
 				1BA6C5962000220200115FC4 /* AVFoundation.framework */,
 				1B799D6B1FE0C42100D716AB /* Stripe.framework */,
 				E93927BF1F8D7C8400D4CB32 /* youtube_ios_player_helper.framework */,
@@ -535,6 +562,8 @@
 		E9336A551F7BEF44001DE4A3 = {
 			isa = PBXGroup;
 			children = (
+				E989E68F20729E50005EFF6E /* ErizoClient */,
+				E989E6BF20729E5E005EFF6E /* Vendor */,
 				E9336A601F7BEF44001DE4A3 /* Cya */,
 				E9336A5F1F7BEF44001DE4A3 /* Products */,
 				1F2CAD22DC28DB0080A59696 /* Pods */,
@@ -617,26 +646,6 @@
 		E93614DF1FFD880E0088BEC2 /* SPTJanusClient */ = {
 			isa = PBXGroup;
 			children = (
-				E93614E21FFD884F0088BEC2 /* RTCICEServer+JSON.h */,
-				E93614F11FFD88510088BEC2 /* RTCICEServer+JSON.m */,
-				E93614E11FFD884F0088BEC2 /* RTCSessionDescription+JSON.h */,
-				E93614E31FFD884F0088BEC2 /* RTCSessionDescription+JSON.m */,
-				E93614F21FFD88510088BEC2 /* SPTJanusClient.h */,
-				E93614EE1FFD88510088BEC2 /* SPTJanusClient.m */,
-				E93614EC1FFD88500088BEC2 /* SPTJanusPluginHandle.h */,
-				E93614E71FFD88500088BEC2 /* SPTJanusPluginHandle.m */,
-				E93614E91FFD88500088BEC2 /* SPTJanusSession.h */,
-				E93614EA1FFD88500088BEC2 /* SPTJanusSession.m */,
-				E93614F01FFD88510088BEC2 /* SPTJanusStream.h */,
-				E93614E41FFD884F0088BEC2 /* SPTJanusStream.m */,
-				E93614E51FFD884F0088BEC2 /* SPTMessageResponse.h */,
-				E93614E81FFD88500088BEC2 /* SPTMessageResponse.m */,
-				E93614ED1FFD88500088BEC2 /* SPTSignalingMessage.h */,
-				E93614E61FFD88500088BEC2 /* SPTSignalingMessage.m */,
-				E93614FC1FFD9DC10088BEC2 /* RTCICECandidate+JSON.h */,
-				E93614FD1FFD9DC10088BEC2 /* RTCICECandidate+JSON.m */,
-				E93614EF1FFD88510088BEC2 /* SPTUtilities.h */,
-				E93614EB1FFD88500088BEC2 /* SPTUtilities.m */,
 				E93614E01FFD884E0088BEC2 /* Cya-Bridging-Header.h */,
 			);
 			path = SPTJanusClient;
@@ -717,6 +726,70 @@
 				E95C80C31FA798AC00378CD7 /* CastService.swift */,
 			);
 			path = cast;
+			sourceTree = "<group>";
+		};
+		E989E68F20729E50005EFF6E /* ErizoClient */ = {
+			isa = PBXGroup;
+			children = (
+				E989E69020729E50005EFF6E /* ECPlayerView.h */,
+				E989E69120729E50005EFF6E /* ECPlayerView.m */,
+				E989E69220729E50005EFF6E /* ECRoom.h */,
+				E989E69320729E50005EFF6E /* ECRoom.m */,
+				E989E69420729E50005EFF6E /* ECRoomStatsProtocol.h */,
+				E989E69520729E50005EFF6E /* ECStream.h */,
+				E989E69620729E50005EFF6E /* ECStream.m */,
+				E989E69720729E50005EFF6E /* ErizoClient.h */,
+				E989E69820729E50005EFF6E /* ErizoClient.m */,
+				E989E69920729E50005EFF6E /* LICENSE */,
+				E989E69A20729E50005EFF6E /* rtc */,
+			);
+			path = ErizoClient;
+			sourceTree = "<group>";
+		};
+		E989E69A20729E50005EFF6E /* rtc */ = {
+			isa = PBXGroup;
+			children = (
+				E989E69B20729E50005EFF6E /* ECClient+Internal.h */,
+				E989E69C20729E50005EFF6E /* ECClient.h */,
+				E989E69D20729E50005EFF6E /* ECClient.m */,
+				E989E69E20729E50005EFF6E /* ECClientDelegate.h */,
+				E989E69F20729E50005EFF6E /* ECClientState.h */,
+				E989E6A020729E50005EFF6E /* ECLicodeProtocol.h */,
+				E989E6A120729E50005EFF6E /* ECSignalingChannel.h */,
+				E989E6A220729E50005EFF6E /* ECSignalingChannel.m */,
+				E989E6A320729E50005EFF6E /* ECSignalingEvent.h */,
+				E989E6A420729E50005EFF6E /* ECSignalingEvent.m */,
+				E989E6A520729E50005EFF6E /* ECSignalingMessage.h */,
+				E989E6A620729E50005EFF6E /* ECSignalingMessage.m */,
+				E989E6A720729E50005EFF6E /* RTCIceCandidate+JSON.h */,
+				E989E6A820729E50005EFF6E /* RTCICECandidate+JSON.m */,
+				E989E6A920729E50005EFF6E /* RTCIceServer+JSON.h */,
+				E989E6AA20729E50005EFF6E /* RTCIceServer+JSON.m */,
+				E989E6AB20729E50005EFF6E /* RTCSessionDescription+JSON.h */,
+				E989E6AC20729E50005EFF6E /* RTCSessionDescription+JSON.m */,
+				E989E6AD20729E50005EFF6E /* SDPUtils.h */,
+				E989E6AE20729E50005EFF6E /* SDPUtils.m */,
+				E989E6AF20729E50005EFF6E /* Utilities.h */,
+				E989E6B020729E50005EFF6E /* Utilities.m */,
+			);
+			path = rtc;
+			sourceTree = "<group>";
+		};
+		E989E6BF20729E5E005EFF6E /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				E989E6C020729E5E005EFF6E /* Logger */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		E989E6C020729E5E005EFF6E /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				E989E6C120729E5E005EFF6E /* Logger.h */,
+				E989E6C220729E5E005EFF6E /* Logger.m */,
+			);
+			path = Logger;
 			sourceTree = "<group>";
 		};
 		E9B9AB3D1F7C09B600033402 /* shared */ = {
@@ -886,6 +959,7 @@
 				1BE242061FD0853E0038770B /* Montserrat-Italic.ttf in Resources */,
 				1BE242021FD0853E0038770B /* Montserrat-Medium.ttf in Resources */,
 				1BE241FC1FD0853E0038770B /* Montserrat-BlackItalic.ttf in Resources */,
+				E989E6B520729E51005EFF6E /* LICENSE in Resources */,
 				E9B9AB661F7C151900033402 /* Readme.md in Resources */,
 				E94547D4200800A500653D13 /* GoogleService-Info.plist in Resources */,
 				1B11ED941FD60CD500B2556E /* Montserrat-Black.ttf in Resources */,
@@ -924,7 +998,11 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/LicodeErizoClient/LicodeErizoClient.framework",
 				"${BUILT_PRODUCTS_DIR}/MessageKit/MessageKit.framework",
+				"${BUILT_PRODUCTS_DIR}/OCHamcrest/OCHamcrest.framework",
+				"${BUILT_PRODUCTS_DIR}/OCMockito/OCMockito.framework",
+				"${PODS_ROOT}/PodRTC/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
 				"${BUILT_PRODUCTS_DIR}/StarscreamSocketIO/StarscreamSocketIO.framework",
@@ -942,7 +1020,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LicodeErizoClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MessageKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OCHamcrest.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OCMockito.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarscreamSocketIO.framework",
@@ -984,7 +1066,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1001,37 +1083,36 @@
 				1B0413B41FD73459007A4227 /* CyaFont.swift in Sources */,
 				1BDD88251FEC4C8900EDADF1 /* UITextViewPlaceholder.swift in Sources */,
 				E92C655B1F85830D001BAEC9 /* SyncService.swift in Sources */,
+				E989E6B320729E51005EFF6E /* ECStream.m in Sources */,
 				1B50AD7E1F9114A10027C025 /* EdgeInsetLabel.swift in Sources */,
 				1BD192821FEB05E3001FEE1F /* TextFieldExtension.swift in Sources */,
+				E989E6BB20729E51005EFF6E /* RTCIceServer+JSON.m in Sources */,
 				E93713042044BCB400F92140 /* PaddingUITextField.swift in Sources */,
 				1B22A3F21FE4978D005B225B /* PurchaseService.swift in Sources */,
 				E9B9AB461F7C0D6000033402 /* EventService.swift in Sources */,
 				E93579B51F90005700901F59 /* User.swift in Sources */,
 				E938F84F1F87C4FF00E83DEA /* Socket.swift in Sources */,
-				E93614F81FFD9C210088BEC2 /* SPTJanusStream.m in Sources */,
 				E92B972D1FBE0C0C00AE6BB0 /* LoginController.swift in Sources */,
-				E93614F31FFD9BF70088BEC2 /* RTCICEServer+JSON.m in Sources */,
 				E9358D851FE2E7CE00703F69 /* UploadService.swift in Sources */,
 				E9262C7F1F7DA33E0008EDE2 /* ChatHelper.swift in Sources */,
-				E93614F71FFD9C1B0088BEC2 /* SPTJanusSession.m in Sources */,
 				1B8446301FCE401D0067A899 /* CustomTransition.swift in Sources */,
 				1B0413B91FDB53F3007A4227 /* Tiers.swift in Sources */,
 				E92B59DE1FE1780C0034C1FC /* SettingsTextField.swift in Sources */,
 				2CA460F11F900E6A0041AEF0 /* QuestionsTableViewCell.swift in Sources */,
+				E989E6C320729E5E005EFF6E /* Logger.m in Sources */,
 				E90116A22032515D009DE42E /* ErrorHelper.swift in Sources */,
 				E951750F1FAD0FD000EEB2D0 /* StatusStageView.swift in Sources */,
 				1B0413B71FD9A682007A4227 /* DescriptionView.swift in Sources */,
 				1B84462A1FCC8ACA0067A899 /* EventDetail.swift in Sources */,
 				E9363CE31F7C49B30079494B /* ChatService.swift in Sources */,
 				E93579AF1F8FE0A800901F59 /* Role.swift in Sources */,
-				E93614FB1FFD9C330088BEC2 /* SPTUtilities.m in Sources */,
 				E9391F621FB382FB00F6D01C /* ToolBarMenu.swift in Sources */,
 				E9425FD41FE4448600648C16 /* DataExtension.swift in Sources */,
 				E91734471FBF4C5F00F0770B /* AuthService.swift in Sources */,
-				E93614F91FFD9C270088BEC2 /* SPTMessageResponse.m in Sources */,
 				1B7337E11FBDE52E00A57B0D /* ViewBuyAccessBarShareDetail.swift in Sources */,
 				E94B56291FED98C4006365EC /* ForgotPasswordController.swift in Sources */,
 				E98CE3081FBBA3E200A3CD76 /* EventListDisplayObject.swift in Sources */,
+				E989E6B120729E51005EFF6E /* ECPlayerView.m in Sources */,
 				E93CC9921FCC879900AECEA6 /* SignUpController.swift in Sources */,
 				2CA8244B1F8D1F8800632174 /* AspectRatio.swift in Sources */,
 				E93921BA1FE041BE00B7AFC4 /* EditSettingsController.swift in Sources */,
@@ -1041,22 +1122,24 @@
 				E93CC99A1FCCD26900AECEA6 /* UserRegisterDisplayObject.swift in Sources */,
 				E92BDA3C1FD747E600A1FEA6 /* RoleView.swift in Sources */,
 				1B8446321FCE468A0067A899 /* MessageChatCellUser.swift in Sources */,
-				E93614FA1FFD9C2C0088BEC2 /* SPTSignalingMessage.m in Sources */,
 				1B11ED911FD5B2A600B2556E /* HexToUIColor.swift in Sources */,
 				1B6CDC671F9FBEF8005C1488 /* AcceptInterviewModal.swift in Sources */,
 				1B7337DF1FBDE4DD00A57B0D /* ViewInfoDetail.swift in Sources */,
 				E95C0BEA1FDF2393004E979C /* FooterSettingsComponent.swift in Sources */,
+				E989E6B620729E51005EFF6E /* ECClient.m in Sources */,
 				2CA460F21F900E6A0041AEF0 /* QuestionsViewController.swift in Sources */,
 				2CA460F41F9019D10041AEF0 /* UIImageViewUrlExtension.swift in Sources */,
 				E9262C7C1F7D89F20008EDE2 /* ChatMessageDisplayObject.swift in Sources */,
 				E9336A641F7BEF45001DE4A3 /* ViewController.swift in Sources */,
+				E989E6BE20729E51005EFF6E /* Utilities.m in Sources */,
 				E93579AD1F8FDE3C00901F59 /* Event.swift in Sources */,
 				E94D1E0D1FCDC632008667A0 /* ErrorResponseDisplayObject.swift in Sources */,
 				1BFDEBE21F9E6BA700F3B9AD /* InterviewModal.swift in Sources */,
+				E989E6B920729E51005EFF6E /* ECSignalingMessage.m in Sources */,
+				E989E6BA20729E51005EFF6E /* RTCICECandidate+JSON.m in Sources */,
 				E9A7511A1FDF388200CF2BA0 /* MoreInfoController.swift in Sources */,
 				1B87D8C81FDF1F3D0063A51F /* AvatarView.swift in Sources */,
 				1B0C8B021FA0C6EB005C5D06 /* JoinStageModal.swift in Sources */,
-				E93614F41FFD9C070088BEC2 /* RTCSessionDescription+JSON.m in Sources */,
 				1B036C0C1FB4BF62006D76BC /* DetailViewController.swift in Sources */,
 				1BDC1BBD1FA13E1C001B2BE2 /* ExpiredStageModal.swift in Sources */,
 				1B0E5A3F1FBF94820041C974 /* EventListHomeViewController.swift in Sources */,
@@ -1064,16 +1147,19 @@
 				1B7337DD1FBDE4AE00A57B0D /* ViewAvatarInfoDetail.swift in Sources */,
 				E93CC9941FCC8D7F00AECEA6 /* FooterViewComponent.swift in Sources */,
 				1BDD88271FEC7EED00EDADF1 /* ActivityIndicator.swift in Sources */,
+				E989E6B720729E51005EFF6E /* ECSignalingChannel.m in Sources */,
 				1B11ED931FD5E44900B2556E /* ExtensionConvertHtml.swift in Sources */,
+				E989E6B420729E51005EFF6E /* ErizoClient.m in Sources */,
+				E989E6B820729E51005EFF6E /* ECSignalingEvent.m in Sources */,
 				E9B9AB4F1F7C0E4A00033402 /* StageViewController.swift in Sources */,
 				E9B9AB4D1F7C0E1300033402 /* StageService.swift in Sources */,
 				E95C0BE41FDED391004E979C /* UserIdNumber.swift in Sources */,
+				E989E6B220729E51005EFF6E /* ECRoom.m in Sources */,
 				E93C34D91FC5F0970017D1EA /* SigService.swift in Sources */,
 				E95C80C41FA798AC00378CD7 /* CastService.swift in Sources */,
 				E93248061FCF6AE800258182 /* PreStageController.swift in Sources */,
 				1B86A2A71FACE33800228E78 /* ListEventsCell.swift in Sources */,
 				E93248041FCF25AA00258182 /* BackButtonView.swift in Sources */,
-				E93614FE1FFD9DC20088BEC2 /* RTCICECandidate+JSON.m in Sources */,
 				1B84462E1FCE07E40067A899 /* ExtendedNavBarView.swift in Sources */,
 				E926941D1F8428A00055A1E1 /* EventContentDisplayObject.swift in Sources */,
 				E93C34D61FC5F0750017D1EA /* ViewerView.swift in Sources */,
@@ -1081,10 +1167,9 @@
 				E914747920336B500035865B /* ChatProfileDisplayObject.swift in Sources */,
 				1BA42B7E1FE81AFC00D5D632 /* PayByStripeDisplayObject.swift in Sources */,
 				E93CC9981FCCB54100AECEA6 /* GralInfoController.swift in Sources */,
-				E93614F51FFD9C0F0088BEC2 /* SPTJanusClient.m in Sources */,
 				1BA42B831FE85E7F00D5D632 /* OrderFormDisplayObject.swift in Sources */,
-				E93614F61FFD9C150088BEC2 /* SPTJanusPluginHandle.m in Sources */,
 				E92694211F842F840055A1E1 /* EventHelper.swift in Sources */,
+				E989E6BC20729E51005EFF6E /* RTCSessionDescription+JSON.m in Sources */,
 				1B036C0E1FB4BFAC006D76BC /* SynaptopTheme.swift in Sources */,
 				E94880C61F8BE43B00028668 /* ContentDisplayObject.swift in Sources */,
 				1BA42B811FE8258500D5D632 /* PayByRSVPDisplayObject.swift in Sources */,
@@ -1093,6 +1178,7 @@
 				E93B4B6A1FC49B480057820C /* LoginDiaplayObject.swift in Sources */,
 				1B036C101FB4D2E5006D76BC /* SearchFooter.swift in Sources */,
 				E93579AB1F8FC91800901F59 /* UserDisplayObject.swift in Sources */,
+				E989E6BD20729E51005EFF6E /* SDPUtils.m in Sources */,
 				E95C0BE71FDEECC6004E979C /* SettingsController.swift in Sources */,
 				E947AE651F82B20200A2F815 /* QuestionDisplayObject.swift in Sources */,
 				1BE2420D1FD1B6A50038770B /* ExtensionLoading.swift in Sources */,
@@ -1248,12 +1334,21 @@
 				CODE_SIGN_ENTITLEMENTS = Cya/Cya.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = E3VLJG387M;
+				DEVELOPMENT_TEAM = 2NKT6794UD;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/Core/Sources",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"${SRCROOT}/../Vendor",
+					"${SRCROOT}/../ErizoClient",
+					"${SRCROOT}/../ErizoClient/rtc",
+				);
 				INFOPLIST_FILE = Cya/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = live.cya.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = live.cya.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cya/shared/library/SPTJanusClient/Cya-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1271,12 +1366,21 @@
 				CODE_SIGN_ENTITLEMENTS = Cya/Cya.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = E3VLJG387M;
+				DEVELOPMENT_TEAM = 2NKT6794UD;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/Core/Sources",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"${SRCROOT}/../Vendor",
+					"${SRCROOT}/../ErizoClient",
+					"${SRCROOT}/../ErizoClient/rtc",
+				);
 				INFOPLIST_FILE = Cya/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = live.cya.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = live.cya.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cya/shared/library/SPTJanusClient/Cya-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
