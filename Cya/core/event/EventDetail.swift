@@ -250,6 +250,7 @@ class EventDetail: UIViewController {
     }
     
     func onEventStatus(){
+        self.setActionStartSyncServiceEventPage(type:0)
         
         sigService!.onEventStatus(handler: {isWaiting, ack in
             if(!isWaiting!){

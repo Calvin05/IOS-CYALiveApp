@@ -229,7 +229,9 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
+        
         self.leaveRoom()
+        
         if(self.playerMovie != nil){
             playerMovie?.pause()
         }
@@ -285,6 +287,7 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
         })
         
         castService!.onInterviewAnswered(handler: {data, ack in
+            self.acceptInterviewModal?.dismiss(animated: true, completion: nil)
             self.interviewModal?.modalPresentationStyle = .overCurrentContext
             self.present(self.interviewModal!, animated: true, completion: nil)
         })
@@ -742,7 +745,7 @@ class StageViewController: UIViewController, YTPlayerViewDelegate{
             
             vStageMovie.layer.addSublayer(self.playerLayerMovie!)
         }
-        
+        print(movie)
         if(movie["time"] != nil){
             let time = movie["time"]!
             if time is NSNumber {
@@ -784,7 +787,7 @@ extension StageViewController: ModalExpiredDelegate {
         let attributes = ["name": "kDefaultUserName", "actualName": "kDefaultUserName", "type": "public"]
         
         self.localStream.setAttributes(attributes)
-        self.remoteRoom.subscribe(self.localStream)
+//        self.remoteRoom.subscribe(self.localStream)
         
         // We get connected and ready to publish, so publish.
         self.remoteRoom.publish(self.localStream)
@@ -809,6 +812,7 @@ extension StageViewController: ToolBarMenuDelegate {
     }
     
     func infoButtonAction() {
+        leaveRoom()
         hideViews()
         eventDescription.isHidden = false
     }
@@ -850,6 +854,7 @@ extension StageViewController: ECRoomDelegate, RTCEAGLVideoViewDelegate {
         for stream: Any in remoteRoom.remoteStreams {
             remoteRoom.subscribe(stream as! ECStream)
         }
+        
     }
     
     func room(_ room: ECRoom!, didError status: ECRoomErrorStatus, reason: String!) {
@@ -859,6 +864,7 @@ extension StageViewController: ECRoomDelegate, RTCEAGLVideoViewDelegate {
     
     func room(_ room: ECRoom!, didSubscribeStream stream: ECStream!) {
         print("didSubscribeStream")
+        
         self.watchStream(stream: stream)
     }
     
@@ -938,28 +944,53 @@ extension StageViewController: ECRoomDelegate, RTCEAGLVideoViewDelegate {
     
     func unpublish(){
         if(localStream.streamId != nil){
-            remoteRoom.unsubscribe(localStream)
+//            remoteRoom.unsubscribe(localStream)
             remoteRoom.unpublish()
+            
+            self.removeStream(streamId: localStream.streamId!)
             
         }
     }
     
     func leaveRoom(){
 //        unpublish()
-        for playerView in playerViews{
-            let player: ECPlayerView = playerView as! ECPlayerView
-            self.removeStream(streamId: player.stream.streamId!)
+        if (localStream.streamId != nil) {
+            remoteRoom.unpublish()
         }
         
-        remoteRoom.leave()
-        remoteRoom = ECRoom()
+        for stream in remoteRoom.remoteStreams{
+            let stremax: ECStream = stream as! ECStream
+            self.removeStream(streamId: stremax.streamId!)
+        }
         
+//        for playerView in playerViews{
+//            let player: ECPlayerView = playerView as! ECPlayerView
+//            self.removeStream(streamId: player.stream.streamId!)
+//        }
+        
+        do {
+            self.remoteRoom.leave()
+            self.remoteRoom = ECRoom()
+        }catch{
+            print("eror")
+        }
+//        self.remoteRoom = ECRoom()
     }
     
     override func viewDidLayoutSubviews() {
         for i in 0..<playerViews.count {
             layoutPlayerView(playerViews[i] as! ECPlayerView, index: i)
         }
+        
+        if(remoteRoom.remoteStreams.count > 0){
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
+            }catch{
+                print("eror")
+            }
+        }
+        
     }
     
     func layoutPlayerView(_ playerView: ECPlayerView?, index: Int) {
@@ -980,6 +1011,7 @@ extension StageViewController: ECRoomDelegate, RTCEAGLVideoViewDelegate {
             print("")
         }
         playerView?.frame = frame
+//        playerView?.stream.mute()
     }
     
     

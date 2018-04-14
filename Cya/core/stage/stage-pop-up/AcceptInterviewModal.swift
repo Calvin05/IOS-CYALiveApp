@@ -17,6 +17,7 @@ class AcceptInterviewModal: UIViewController {
     private let btnCancel = UIButton(type: .custom) as UIButton
     private let contentView: UIView = UIView()
     var castService: CastService?
+    var acceptAgain: Bool = true
     
     func setCastService(castService: CastService){
         self.castService = castService
@@ -170,18 +171,46 @@ extension AcceptInterviewModal {
 // MARK: -  Actions Buttons
 extension AcceptInterviewModal {
     @objc func closeModal(sender:UIButton!) {
+        self.acceptAgain = true
         castService!.declineInterview()
         dismiss(animated: true, completion: nil)
     }
     
     
     @objc func btnAccept(sender:UIButton!) {
+        
+//        castService!.onInterviewAnswered(handler: {data, ack in
+//            self.dismiss(animated: true, completion: nil)
+//        })
+        
         castService!.answerInterview()
-        dismiss(animated: true, completion: nil)
+        
+//        if(acceptAgain){
+//            self.acceptAgain = false
+//
+//            castService!.onInterviewAnswered(handler: {data, ack in
+//                self.acceptAgain = true
+//                self.dismiss(animated: true, completion: nil)
+//            })
+//
+//            castService!.onError(handler: {data, ack in
+//                self.acceptAgain = true
+//            })
+//
+//            castService!.answerInterview()
+//
+//
+//        }
+        
+        
+        
+        
+        
         
     }
     
     @objc func btnCancelModal(sender:UIButton!) {
+        self.acceptAgain = true
         castService!.declineInterview()
         dismiss(animated: true, completion: nil)
     }

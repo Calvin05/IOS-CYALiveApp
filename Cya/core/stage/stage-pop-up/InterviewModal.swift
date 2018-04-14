@@ -13,6 +13,13 @@ import UIKit
 
 //class InterviewModal: UIViewController, SPTJanusClientDelegate, RTCEAGLVideoViewDelegate {
 class InterviewModal: UIViewController {
+    
+    var remoteRoom: ECRoom = ECRoom()
+    var localStream: ECStream = ECStream()
+    var playerViews = [AnyHashable]()
+    var playerWidth: CGFloat = 0.0
+    var playerHeight: CGFloat = 0.0
+    
     // MARK: -  Components
     private let textHeader: EdgeInsetLabel = EdgeInsetLabel()
     private let btnCancel = UIButton(type: .system) as UIButton
@@ -20,10 +27,10 @@ class InterviewModal: UIViewController {
 //    var wvStages: UIWebView?
     
     
-//    var localView: RTCEAGLVideoView = RTCEAGLVideoView()
-//    var localVideoTrack: RTCVideoTrack?
-//    var remoteView: RTCEAGLVideoView = RTCEAGLVideoView()
-//    var remoteVideoTrack: RTCVideoTrack?
+    var localView: RTCEAGLVideoView = RTCEAGLVideoView()
+    var localVideoTrack: RTCVideoTrack?
+    var remoteView: RTCEAGLVideoView = RTCEAGLVideoView()
+    var remoteVideoTrack: RTCVideoTrack?
 //    var client: SPTJanusClient?
 //    var clientListener: SPTJanusClient?
     
@@ -104,6 +111,7 @@ class InterviewModal: UIViewController {
     func onApproved(){
         castService!.onApproved(handler: {data, ack in
 //            self.client?.disconnect()
+            self.remoteRoom.leave()
             self.dismiss(animated: true, completion: {
                 self.interviewModalDelegate?.returnInterviewModal()
             })
@@ -113,6 +121,7 @@ class InterviewModal: UIViewController {
     func onInterviewDeclined(){
         castService!.onInterviewDeclined(handler: {data, ack in
 //            self.client?.disconnect()
+            self.remoteRoom.leave()
             self.dismiss(animated: true, completion: {
                 self.interviewModalDelegate?.returnInterviewModal()
             })
@@ -121,16 +130,11 @@ class InterviewModal: UIViewController {
     
     func onInterviewAnswered(){
         castService!.onInterviewAnswered(handler: {data, ack in
-//            self.client?.createWebRTCPeerConnection(asInitiator: true, userInfo: data as! [AnyHashable : Any])
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(5000)) {
-//                self.clientListener?.createWebRTCPeerConnection(asInitiator: false, userInfo: data as! [AnyHashable : Any])
-            }
-            
+            self.remoteRoom = ECRoom(encodedToken: data! as! String, delegate: self, andPeerFactory: RTCPeerConnectionFactory())
+                self.initializeLocalStream()
         })
     }
     
-
 }
 
 
@@ -175,31 +179,31 @@ extension InterviewModal {
     }
     
     func setWebRTC(){
-//        contentView.addSubview(remoteView)
-//        contentView.addSubview(localView)
-//
-//        remoteView.translatesAutoresizingMaskIntoConstraints = false
-//        localView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        remoteView.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -20).isActive = true
-//        remoteView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-//        remoteView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-//        remoteView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-//
-//        remoteView.layer.cornerRadius = 100
-//        remoteView.layer.masksToBounds = true
-//        remoteView.backgroundColor = UIColor.red
-//
-//
-//        localView.bottomAnchor.constraint(equalTo: remoteView.topAnchor, constant: -20).isActive = true
-//        localView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//        localView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        localView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-//
-//        localView.layer.cornerRadius = 50
-//        localView.layer.masksToBounds = true
-//
-//        localView.backgroundColor = UIColor.red
+        contentView.addSubview(remoteView)
+        contentView.addSubview(localView)
+
+        remoteView.translatesAutoresizingMaskIntoConstraints = false
+        localView.translatesAutoresizingMaskIntoConstraints = false
+
+        remoteView.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -20).isActive = true
+        remoteView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        remoteView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        remoteView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+
+        remoteView.layer.cornerRadius = 100
+        remoteView.layer.masksToBounds = true
+        remoteView.backgroundColor = UIColor.red
+
+
+        localView.bottomAnchor.constraint(equalTo: remoteView.topAnchor, constant: -20).isActive = true
+        localView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        localView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        localView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+
+        localView.layer.cornerRadius = 50
+        localView.layer.masksToBounds = true
+
+        localView.backgroundColor = UIColor.red
         
         
         
@@ -261,7 +265,9 @@ extension InterviewModal {
 extension InterviewModal {
     @objc func closeModal(sender:UIButton!) {
 //        self.client?.disconnect()
-        castService!.declineInterview()
+//        castService!.declineInterview()
+        castService!.leaveStage()
+        remoteRoom.leave()
         dismiss(animated: true, completion: {
             self.interviewModalDelegate?.returnInterviewModal()
         })
@@ -269,11 +275,92 @@ extension InterviewModal {
     
     @objc func btnCancelModal(sender:UIButton!) {
 //        self.client?.disconnect()
-        castService!.declineInterview()
+//        castService!.declineInterview()
+        castService!.leaveStage()
+        remoteRoom.leave()
         dismiss(animated: true, completion: {
             self.interviewModalDelegate?.returnInterviewModal()
         })
     }
+}
+
+extension InterviewModal: ECRoomDelegate, RTCEAGLVideoViewDelegate{
     
+    func room(_ room: ECRoom!, didSubscribeStream stream: ECStream!) {
+        
+        self.remoteVideoTrack = stream.mediaStream?.videoTracks[0]
+        self.remoteVideoTrack?.add(remoteView)
+    }
+    
+    func room(_ room: ECRoom!, didUnSubscribeStream stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didPublishStream stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didUnpublishStream stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didStartRecording stream: ECStream!, withRecordingId recordingId: String!, recording recordingDate: Date!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didFailStartRecording stream: ECStream!, withErrorMsg errorMsg: String!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didConnect roomMetadata: [AnyHashable : Any]!) {
+        for stream: Any in remoteRoom.remoteStreams {
+            remoteRoom.subscribe(stream as! ECStream)
+        }
+        
+        let attributes = ["name": "kDefaultUserName", "actualName": "kDefaultUserName", "type": "public"]
+        
+        self.localStream.setAttributes(attributes)
+        
+        self.remoteRoom.publish(self.localStream)
+    }
+    
+    func room(_ room: ECRoom!, didError status: ECRoomErrorStatus, reason: String!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didChange status: ECRoomStatus) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didAddedStream stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didRemovedStream stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didReceiveData data: [AnyHashable : Any]!, from stream: ECStream!) {
+        
+    }
+    
+    func room(_ room: ECRoom!, didUpdateAttributesOf stream: ECStream!) {
+        
+    }
+    
+    func videoView(_ videoView: RTCEAGLVideoView, didChangeVideoSize size: CGSize) {
+        
+    }
+    
+    func initializeLocalStream() {
+        
+        localStream = ECStream(localStreamWithOptions: nil, attributes: ["name": "localStream"])
+        
+        if(localStream.hasVideo()){
+            self.localVideoTrack = localStream.mediaStream?.videoTracks[0]
+            self.localVideoTrack?.add(localView)
+        }
+        
+    }
     
 }

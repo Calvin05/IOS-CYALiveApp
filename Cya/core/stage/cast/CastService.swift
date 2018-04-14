@@ -49,6 +49,8 @@ class CastService {
     let INTERVIEW_ANSWERED: String = "sc:interview:answered"
     
     var interviewId: String?
+    var interviewer: String?
+    var interviewee: String?
     
     
     init(sid: String, eventId: String, webToken: String){
@@ -108,7 +110,8 @@ class CastService {
     }
     
     func answerInterview() {
-        self.socket.emit(INTERVIEW_ANSWER, ["sid": sid, "nid": self.interviewId])
+//        self.socket.emit(INTERVIEW_ANSWER, ["interviewer": self.interviewer!, "inteviewee": self.inteviewee!])
+        self.socket.emit(INTERVIEW_ANSWER, ["interviewer": interviewer, "interviewee": interviewee])
     }
     
     func declineInterview() {
@@ -285,8 +288,11 @@ class CastService {
     
     func onInterviewCalled(handler: @escaping (Any?, String?) -> Void){
         socket.on(INTERVIEW_CALLED) {data, ack in
+            print(data)
             var dataProperties = data[0] as! [String: String]
-            self.interviewId = dataProperties["nid"]
+//            self.interviewId = dataProperties["nid"]
+            self.interviewer = dataProperties["interviewer"]
+            self.interviewee = dataProperties["interviewee"]
             handler(data, "Error")
         }
     }
@@ -305,11 +311,11 @@ class CastService {
     
     func onInterviewAnswered(handler: @escaping (Any?, String?) -> Void){
         socket.on(INTERVIEW_ANSWERED) {data, ack in
-            var dataProperties = data[0] as! [String: Any]
-            var room = dataProperties["room"] as! [String: Any]
-            
-            dataProperties["room"] = room
-            handler(dataProperties, "Error")
+            var dataProperties = data[0] as! [String: String]
+//            var room = dataProperties["room"] as! [String: Any]
+//            dataProperties["room"] = room
+            let licodeToken = dataProperties["token"]!
+            handler(licodeToken, "Error")
         }
     }
     
